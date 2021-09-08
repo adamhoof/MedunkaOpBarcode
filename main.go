@@ -27,11 +27,12 @@ func main() {
 			log.Fatal(err)
 		}
 		s := string(buf[:n-1])
-		rawProductData := apiHandler.RequestProductData(s)
+		fmt.Println(s)
+		/*rawProductData := apiHandler.RequestProductData(s)
 		productData := unpacker.UnpackJSON(rawProductData)
 		for key, value := range productData {
 			fmt.Println(key, value)
-		}
+		}*/
 		/*for  {
 		fmt.Print("Bar-code: ")
 		productBarcode := barcodeController.ReadData()
