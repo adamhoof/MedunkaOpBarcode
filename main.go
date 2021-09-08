@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/tarm/serial"
 	"log"
+	"time"
 )
 
 func main() {
@@ -11,9 +12,9 @@ func main() {
 	unpacker := Unpacker{}*/
 
 	config := &serial.Config{
-		Name: "/dev/ttyAMA0",
+		Name: "/dev/ttyS0",
 		Baud: 9600,
-		Size: 16,
+		ReadTimeout: 1*time.Second,
 	}
 	stream, err := serial.OpenPort(config)
 	if err != nil {
