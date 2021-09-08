@@ -9,12 +9,12 @@ import (
 func main() {
 	/*apiHandler := APIHandler{}
 	unpacker := Unpacker{}*/
+	barcodeController := BarcodeController{}
+	barcodeController.CreateBarcode()
+	barcodeController.SetupBarcode("/dev/ttyAMA0", 9600)
+	/*barcodeController.barcode.ReadBytes('\n')*/
 
-	config := &serial.Config{
-		Name: "/dev/ttyAMA0",
-		Baud: 9600,
-	}
-	stream, err := serial.OpenPort(config)
+	stream, err := serial.OpenPort(barcodeController.config)
 	if err != nil {
 		log.Fatal(err)
 	}
