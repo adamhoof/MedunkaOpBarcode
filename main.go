@@ -13,6 +13,7 @@ func main() {
 	config := &serial.Config{
 		Name: "/dev/ttyAMA0",
 		Baud: 9600,
+		Size: 2,
 	}
 	stream, err := serial.OpenPort(config)
 	if err != nil {
