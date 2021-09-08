@@ -16,7 +16,7 @@ func main() {
 
 	for {
 		fmt.Print("Bar-code: ")
-		n, err := barcodeController.barcode.ReadString('\n')
+		n, err := barcodeController.barcode.ReadBytes('\n')
 		if err != nil {
 			panic(err)
 		}
