@@ -26,7 +26,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		s := string(buf[:n-1])
+		s := string(buf[:n])
 		fmt.Println(s)
 		/*rawProductData := apiHandler.RequestProductData(s)
 		productData := unpacker.UnpackJSON(rawProductData)
