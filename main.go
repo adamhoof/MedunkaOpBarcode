@@ -2,33 +2,25 @@ package main
 
 import (
 	"fmt"
-	"github.com/tarm/serial"
-	"log"
-	"time"
 )
 
 func main() {
 	/*apiHandler := APIHandler{}
 	unpacker := Unpacker{}*/
+	barcodeController := BarcodeController{}
+	serialHandler := SerialHandler{}
+	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
+	serialHandler.OpenPort()
+	barcodeController.CreateBarcode(serialHandler.port)
 
-	config := &serial.Config{
-		Name: "/dev/ttyAMA0",
-		Baud: 9600,
-		ReadTimeout: 1*time.Second,
-	}
-	stream, err := serial.OpenPort(config)
-	if err != nil {
-		log.Fatal(err)
-	}
-	buf := make([]byte, 1024)
 
 	for {
 		fmt.Print("Bar-code: ")
-		n, err := stream.Read(buf)
+		n, err := barcodeController.barcode.ReadBytes('\x0d')
+		s := string(n)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
-		s := string(buf[:n])
 		fmt.Println(s)
 		/*rawProductData := apiHandler.RequestProductData(s)
 		productData := unpacker.UnpackJSON(rawProductData)
