@@ -9,14 +9,14 @@ func main() {
 	unpacker := Unpacker{}*/
 	barcodeController := BarcodeController{}
 	serialHandler := SerialHandler{}
-	barcodeController.CreateBarcode()
 	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
 	serialHandler.OpenPort()
+	barcodeController.CreateBarcode(serialHandler.port)
 
 
 	for {
 		fmt.Print("Bar-code: ")
-		n, err := barcodeController.barcode.ReadBytes('\x0D')
+		n, err := barcodeController.barcode.ReadString('\n')
 		if err != nil {
 			panic(err)
 		}
