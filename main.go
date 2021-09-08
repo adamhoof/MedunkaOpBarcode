@@ -7,8 +7,8 @@ import (
 )
 
 func main()  {
-	/*apiHandler := APIHandler{}
-	unpacker := Unpacker{}*/
+	apiHandler := APIHandler{}
+	unpacker := Unpacker{}
 	
 	config := &serial.Config{
 		Name: "/dev/ttyAMA0",
@@ -21,12 +21,16 @@ func main()  {
 	buf := make([]byte, 1024)
 
 	for  {
+		fmt.Print("Bar-code: ")
 		n, err := stream.Read(buf)
 		if err != nil {
 			log.Fatal(err)
 		}
 		s := string(buf[:n])
-		fmt.Println(s)
+		rawProductData := apiHandler.RequestProductData(s)
+		productData := unpacker.UnpackJSON(rawProductData)
+		for key, value := range productData {
+			fmt.Println(key, value)
 	}
 	/*for  {
 		fmt.Print("Bar-code: ")
