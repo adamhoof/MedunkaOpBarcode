@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 )
 
 func main() {
@@ -19,7 +18,7 @@ func main() {
 		fmt.Print("Bar-code: ")
 		n, err := barcodeController.barcode.ReadBytes('\x0d')
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 		fmt.Println(n)
 		/*rawProductData := apiHandler.RequestProductData(s)
