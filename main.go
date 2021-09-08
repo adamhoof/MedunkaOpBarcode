@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"strings"
 )
 
 func main() {
@@ -17,8 +16,7 @@ func main() {
 
 	for {
 		fmt.Print("Bar-code: ")
-		n, err := barcodeController.barcode.ReadString('\n')
-		n = strings.Replace(n, "\n", "", -1)
+		n, err := barcodeController.barcode.ReadBytes('\n')
 		if err != nil {
 			log.Fatal(err)
 		}
