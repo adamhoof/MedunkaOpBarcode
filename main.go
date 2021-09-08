@@ -17,10 +17,11 @@ func main() {
 	for {
 		fmt.Print("Bar-code: ")
 		n, err := barcodeController.barcode.ReadBytes('\x0d')
+		s := string(n)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(n)
+		fmt.Println(s)
 		/*rawProductData := apiHandler.RequestProductData(s)
 		productData := unpacker.UnpackJSON(rawProductData)
 		for key, value := range productData {
