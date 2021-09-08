@@ -12,7 +12,7 @@ func main() {
 	unpacker := Unpacker{}*/
 
 	config := &serial.Config{
-		Name: "/dev/ttyS0",
+		Name: "/dev/ttyAMA0",
 		Baud: 9600,
 		ReadTimeout: 1*time.Second,
 	}
