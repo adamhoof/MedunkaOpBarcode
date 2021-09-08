@@ -7,7 +7,7 @@ type SerialHandler struct {
 	port *serial.Port
 }
 
-func (serialHandler *SerialHandler) SetupBarcode(port string, baud int) {
+func (serialHandler *SerialHandler) PortConfig(port string, baud int) {
 	serialHandler.config.Name = port
 	serialHandler.config.Baud = baud
 }

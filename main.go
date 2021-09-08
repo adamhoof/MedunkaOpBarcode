@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 )
 
 func main() {
@@ -11,19 +12,17 @@ func main() {
 	barcodeController := BarcodeController{}
 	serialHandler := SerialHandler{}
 	barcodeController.CreateBarcode()
-	serialHandler.SetupBarcode("/dev/ttyAMA0", 9600)
+	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
 	serialHandler.OpenPort()
-
-	buf := make([]byte, 1024)
 
 	for {
 		fmt.Print("Bar-code: ")
-		n, err := serialHandler.port.Read(buf)
+		n, err := barcodeController.barcode.ReadString('\n')
+		n = strings.Replace(n, "\n", "", -1)
 		if err != nil {
 			log.Fatal(err)
 		}
-		s := string(buf[:n])
-		fmt.Println(s)
+		fmt.Println(n)
 		/*rawProductData := apiHandler.RequestProductData(s)
 		productData := unpacker.UnpackJSON(rawProductData)
 		for key, value := range productData {

@@ -8,7 +8,6 @@ import (
 
 type BarcodeController struct {
 	barcode *bufio.Reader
-
 }
 
 func (barcodeController *BarcodeController) CreateBarcode() {
