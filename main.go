@@ -26,7 +26,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		s := string(buf[:n])
+		s := string(buf[:n-1])
 		rawProductData := apiHandler.RequestProductData(s)
 		productData := unpacker.UnpackJSON(rawProductData)
 		for key, value := range productData {
