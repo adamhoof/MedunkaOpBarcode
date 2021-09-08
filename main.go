@@ -14,9 +14,10 @@ func main() {
 	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
 	serialHandler.OpenPort()
 
+	var p []byte
 	for {
 		fmt.Print("Bar-code: ")
-		n, err := barcodeController.barcode.ReadBytes('\n')
+		n, err := barcodeController.barcode.Read(p)
 		if err != nil {
 			log.Fatal(err)
 		}
