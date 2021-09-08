@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	apiHandler := APIHandler{}
-	unpacker := Unpacker{}
+	/*apiHandler := APIHandler{}
+	unpacker := Unpacker{}*/
 
 	config := &serial.Config{
 		Name: "/dev/ttyAMA0",
