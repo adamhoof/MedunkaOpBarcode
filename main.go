@@ -6,10 +6,10 @@ import (
 	"log"
 )
 
-func main()  {
+func main() {
 	apiHandler := APIHandler{}
 	unpacker := Unpacker{}
-	
+
 	config := &serial.Config{
 		Name: "/dev/ttyAMA0",
 		Baud: 9600,
@@ -20,7 +20,7 @@ func main()  {
 	}
 	buf := make([]byte, 1024)
 
-	for  {
+	for {
 		fmt.Print("Bar-code: ")
 		n, err := stream.Read(buf)
 		if err != nil {
@@ -31,8 +31,8 @@ func main()  {
 		productData := unpacker.UnpackJSON(rawProductData)
 		for key, value := range productData {
 			fmt.Println(key, value)
-	}
-	/*for  {
+		}
+		/*for  {
 		fmt.Print("Bar-code: ")
 		productBarcode := barcodeController.ReadData()
 		rawProductData := apiHandler.RequestProductData(productBarcode)
@@ -42,4 +42,4 @@ func main()  {
 			fmt.Println(key, value)
 		}*/
 	}
-
+}
