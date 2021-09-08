@@ -13,7 +13,7 @@ func (serialHandler *SerialHandler) PortConfig(port string, baud int) {
 }
 
 func (serialHandler *SerialHandler) OpenPort(){
-	port, err := serial.OpenPort(&(serialHandler).config)
+	port, err := serial.OpenPort(&serialHandler.config)
 	if err != nil {
 		panic(err)
 	}
