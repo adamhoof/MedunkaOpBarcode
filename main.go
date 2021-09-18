@@ -15,7 +15,7 @@ func main() {
 	barcodeController.CreateBarcode(serialHandler.port)
 
 	for {
-		fmt.Print("Bar-code: ")
+		fmt.Print("\033[H\033[2J")
 		barcodeOutput, err := barcodeController.barcode.ReadBytes('\x0d')
 		if err != nil {
 			panic(err)
