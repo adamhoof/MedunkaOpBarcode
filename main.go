@@ -26,8 +26,9 @@ func main() {
 		productData := unpacker.UnpackJSON(rawProductData)
 
 		fmt.Println("Cena/Price:")
-		fmt.Println(productData["price"])
-		fmt.Print("Jednotková cena:")
+		fmt.Print(productData["price"])
+		fmt.Println(",-")
+		fmt.Print("Jednotková cena/")
 		fmt.Println("Unit Price:")
 		fmt.Println(productData["price_in_sale"])
 	}
