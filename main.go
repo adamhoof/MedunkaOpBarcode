@@ -25,9 +25,6 @@ func main() {
 		rawProductData := apiHandler.RequestProductData(stringBarcodeOutput)
 		productData := unpacker.UnpackJSON(rawProductData)
 
-		for key, value := range productData {
-			fmt.Println(key, value)
-		}
 		fmt.Println("Cena/Price: ")
 		fmt.Println(productData["price"])
 		fmt.Println("Jednotková cena: ")
