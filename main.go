@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main() {
@@ -20,6 +21,7 @@ func main() {
 			panic(err)
 		}
 		stringBarcodeOutput := string(barcodeOutput)
+		stringBarcodeOutput = strings.Replace(stringBarcodeOutput, "\r", "", -1)
 		rawProductData := apiHandler.RequestProductData(stringBarcodeOutput)
 		productData := unpacker.UnpackJSON(rawProductData)
 
