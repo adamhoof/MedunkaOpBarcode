@@ -23,6 +23,7 @@ func main() {
 		stringBarcodeOutput := string(barcodeOutput)
 		stringBarcodeOutput = strings.Replace(stringBarcodeOutput, "\r", "", -1)
 		fmt.Println(stringBarcodeOutput)
+
 		rawProductData := apiHandler.RequestProductData(stringBarcodeOutput)
 		productData := unpacker.UnpackJSON(rawProductData)
 
