@@ -22,12 +22,16 @@ func main() {
 		fmt.Print("\033[H\033[2J")
 		stringBarcodeOutput := string(barcodeOutput)
 		stringBarcodeOutput = strings.Replace(stringBarcodeOutput, "\r", "", -1)
-		fmt.Println(stringBarcodeOutput)
 		rawProductData := apiHandler.RequestProductData(stringBarcodeOutput)
 		productData := unpacker.UnpackJSON(rawProductData)
 
 		for key, value := range productData {
 			fmt.Println(key, value)
 		}
+		fmt.Println("Cena/Price: ")
+		fmt.Println(productData["price"])
+		fmt.Println("Jednotková cena: ")
+		fmt.Println("Unit Price: ")
+		fmt.Println(productData["price_in_sale"])
 	}
 }
