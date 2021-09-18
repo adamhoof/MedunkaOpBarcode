@@ -15,11 +15,11 @@ func main() {
 	barcodeController.CreateBarcode(serialHandler.port)
 
 	for {
-		fmt.Print("\033[H\033[2J")
 		barcodeOutput, err := barcodeController.barcode.ReadBytes('\x0d')
 		if err != nil {
 			panic(err)
 		}
+		fmt.Print("\033[H\033[2J")
 		stringBarcodeOutput := string(barcodeOutput)
 		stringBarcodeOutput = strings.Replace(stringBarcodeOutput, "\r", "", -1)
 		fmt.Println(stringBarcodeOutput)
