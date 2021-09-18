@@ -25,10 +25,10 @@ func main() {
 		rawProductData := apiHandler.RequestProductData(stringBarcodeOutput)
 		productData := unpacker.UnpackJSON(rawProductData)
 
-		fmt.Println("Cena/Price: ")
+		fmt.Println("Cena/Price:")
 		fmt.Println(productData["price"])
-		fmt.Println("Jednotková cena: ")
-		fmt.Println("Unit Price: ")
+		fmt.Print("Jednotková cena:")
+		fmt.Println("Unit Price:")
 		fmt.Println(productData["price_in_sale"])
 	}
 }
