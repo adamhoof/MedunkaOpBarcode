@@ -1,12 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"strings"
+	_ "github.com/lib/pq"
 )
 
 func main() {
-	apiHandler := APIHandler{}
+	postgreHandler := PostgreSQLHandler{}
+	postgreHandler.Connect()
+	/*postgreHandler.TestConnection()*/
+	/*postgreHandler.CreateTable()*/
+	postgreHandler.ImportFromCSV()
+	postgreHandler.Disconnect()
+
+
+	/*apiHandler := APIHandler{}
 	unpacker := Unpacker{}
 	barcodeController := BarcodeController{}
 	serialHandler := SerialHandler{}
@@ -25,11 +32,12 @@ func main() {
 		rawProductData := apiHandler.RequestProductData(stringBarcodeOutput)
 		productData := unpacker.UnpackJSON(rawProductData)
 
+		fmt.Println()
 		fmt.Println("Cena/Price:")
 		fmt.Print(productData["price"])
 		fmt.Println(",-")
+		fmt.Println()
 		fmt.Print("Jednotková cena/")
 		fmt.Println("Unit Price:")
-		fmt.Println(productData["price_in_sale"])
-	}
+		fmt.Println(productData["price_in_sale"])*/
 }
