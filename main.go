@@ -28,10 +28,14 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
 		stringBarcodeOutput := string(rawBarcode)
 		stringBarcodeOutput = strings.Replace(stringBarcodeOutput, "\r", "", -1)
-		if formatedBarcode, err := strconv.Atoi(stringBarcodeOutput); err == nil {
-			fmt.Printf("i=%d, type: %T\n", formatedBarcode, formatedBarcode)
+
+		var formatedBarcode int64
+		if i, convErr := strconv.ParseInt(stringBarcodeOutput, 10, 64); convErr == nil {
+			formatedBarcode = i
 		}
+		fmt.Println(formatedBarcode)
 	}
 }
