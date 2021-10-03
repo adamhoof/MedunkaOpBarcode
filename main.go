@@ -37,5 +37,9 @@ func main() {
 			formatedBarcode = i
 		}
 		fmt.Println(formatedBarcode)
+		postgreHandler.Connect()
+		price, mj, mjkoef :=postgreHandler.QueryProductData(formatedBarcode)
+		fmt.Println(price, mj, mjkoef)
+		postgreHandler.Disconnect()
 	}
 }
