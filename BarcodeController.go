@@ -10,7 +10,7 @@ type BarcodeController struct {
 	barcode *bufio.Reader
 }
 
-func (barcodeController *BarcodeController) CreateBarcode(port *serial.Port) {
+func (barcodeController *BarcodeController) CreateBarcodeReader(port *serial.Port) {
 	barcodeController.barcode = bufio.NewReader(port)
 }
 
