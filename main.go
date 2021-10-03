@@ -11,8 +11,6 @@ func main() {
 	postgreHandler.CreateTable()
 	postgreHandler.ImportFromCSV()
 	postgreHandler.Disconnect()
-
-
 	/*apiHandler := APIHandler{}
 	unpacker := Unpacker{}
 	barcodeController := BarcodeController{}
