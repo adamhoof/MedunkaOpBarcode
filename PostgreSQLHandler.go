@@ -19,7 +19,7 @@ const (
 
 const dropExistingTable = `DROP TABLE IF EXISTS products;`
 const createTable = `CREATE TABLE products(barcode bigint, price smallint, mj varchar(5), mjkoef decimal);`
-const importFromCSVToTable = `COPY products TO '/home/adamhoof/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const importFromCSVToTable = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
 
 func (postgreHandler *PostgreSQLHandler) Connect() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
