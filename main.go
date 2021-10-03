@@ -3,30 +3,35 @@ package main
 import (
 	"fmt"
 	_ "github.com/lib/pq"
+	"strconv"
 	"strings"
 )
 
 func main() {
 	postgreHandler := PostgreSQLHandler{}
+	serialHandler := SerialHandler{}
+	barcodeController := BarcodeController{}
+
 	postgreHandler.Connect()
 	postgreHandler.DropTableIfExists()
 	postgreHandler.CreateTable()
 	postgreHandler.ImportFromCSV()
 	postgreHandler.Disconnect()
 
-	barcodeController := BarcodeController{}
-	serialHandler := SerialHandler{}
 	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
 	serialHandler.OpenPort()
+
 	barcodeController.CreateBarcodeReader(serialHandler.port)
 
 	for {
-		barcodeOutput, err := barcodeController.barcode.ReadBytes('\x0d')
+		rawBarcode, err := barcodeController.barcode.ReadBytes('\x0d')
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(barcodeOutput)
-		stringBarcodeOutput := string(barcodeOutput)
+		stringBarcodeOutput := string(rawBarcode)
 		stringBarcodeOutput = strings.Replace(stringBarcodeOutput, "\r", "", -1)
+		if formatedBarcode, err := strconv.Atoi(stringBarcodeOutput); err == nil {
+			fmt.Printf("i=%d, type: %T\n", formatedBarcode, formatedBarcode)
+		}
 	}
 }
