@@ -7,8 +7,8 @@ import (
 func main() {
 	postgreHandler := PostgreSQLHandler{}
 	postgreHandler.Connect()
-	/*postgreHandler.TestConnection()*/
-	/*postgreHandler.CreateTable()*/
+	postgreHandler.DropTableIfExists()
+	postgreHandler.CreateTable()
 	postgreHandler.ImportFromCSV()
 	postgreHandler.Disconnect()
 

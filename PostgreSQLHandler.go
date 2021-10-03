@@ -17,8 +17,9 @@ const (
 	dbname   = "medunkaproducts"
 )
 
-const createTable = `CREATE TABLE products(barcode bigint, price smallint, mj varchar(5), mjkoef decimal)`
-const importFromCSVToTable = `COPY products TO '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const dropExistingTable = `DROP TABLE IF EXISTS products;`
+const createTable = `CREATE TABLE products(barcode bigint, price smallint, mj varchar(5), mjkoef decimal);`
+const importFromCSVToTable = `COPY products TO '/home/adamhoof/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
 
 func (postgreHandler *PostgreSQLHandler) Connect() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -55,6 +56,13 @@ func (postgreHandler *PostgreSQLHandler) CreateTable(){
 
 func (postgreHandler *PostgreSQLHandler) ImportFromCSV(){
 	_, err := postgreHandler.db.Exec(importFromCSVToTable)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (postgreHandler *PostgreSQLHandler) DropTableIfExists(){
+	_, err := postgreHandler.db.Exec(dropExistingTable)
 	if err != nil {
 		panic(err)
 	}
