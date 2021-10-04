@@ -25,24 +25,12 @@ func main() {
 	for {
 		barcodeAsByteArray := barcodeController.Read()
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
-		fmt.Println(barcodeAsByteArray)
-		barcodeAsInt, _ := strconv.Atoi(string(barcodeAsByteArray))
-		fmt.Println(barcodeAsInt)
+		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
 
-
-
-		/*stringBarcodeOutput := string(barcodeAsByteArray)
-		stringBarcodeOutput = strings.Replace(stringBarcodeOutput, "\r", "", -1)*/
-
-		/*var formatedBarcode int64
-		if i, convErr := strconv.ParseInt(stringBarcodeOutput, 10, 64); convErr == nil {
-			formatedBarcode = i
-		}*/
-		/*fmt.Println(formatedBarcode)
 		postgreHandler.Connect()
-		price, mj, mjkoef := postgreHandler.QueryProductData(formatedBarcode)
+		price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsInt)
 		postgreHandler.Disconnect()
-		fmt.Println(price, mj, mjkoef)*/
+		fmt.Println(price, mj, mjkoef)
 
 	}
 }
