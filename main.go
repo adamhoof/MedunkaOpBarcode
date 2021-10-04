@@ -1,9 +1,9 @@
 package main
 
 import (
-	"encoding/binary"
 	"fmt"
 	_ "github.com/lib/pq"
+	"strconv"
 )
 
 func main() {
@@ -24,10 +24,11 @@ func main() {
 
 	for {
 		barcodeAsByteArray := barcodeController.Read()
+		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
+		fmt.Println(barcodeAsByteArray)
+		barcodeAsInt, _ := strconv.Atoi(string(barcodeAsByteArray))
+		fmt.Println(barcodeAsInt)
 
-
-		i := int64(binary.LittleEndian.Uint64(barcodeAsByteArray))
-		fmt.Println(i)
 
 
 		/*stringBarcodeOutput := string(barcodeAsByteArray)
