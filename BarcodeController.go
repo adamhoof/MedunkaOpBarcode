@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"github.com/tarm/serial"
 )
 
@@ -14,7 +13,10 @@ func (barcodeController *BarcodeController) CreateBarcodeReader(port *serial.Por
 	barcodeController.barcode = bufio.NewReader(port)
 }
 
-func (barcodeController *BarcodeController) ReadData() {
-	code, _ := barcodeController.barcode.ReadString('\n')
-	fmt.Println(code)
+func (barcodeController *BarcodeController) Read() []byte {
+	barcode, err := barcodeController.barcode.ReadBytes('\x0d')
+	if err != nil {
+		panic(err)
+	}
+	return barcode
 }
