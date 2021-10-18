@@ -10,7 +10,7 @@ type PostgreSQLHandler struct {
 }
 
 const (
-	host     = "192.168.1.116"
+	host     = "10.0.0.85"
 	port     = 5432
 	user     = "pi"
 	password = "medprodsdb"
