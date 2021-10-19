@@ -10,16 +10,17 @@ type PostgreSQLHandler struct {
 }
 
 const (
-	host     = "192.168.1.116"
+	host     = "10.0.0.2"
 	port     = 5432
 	user     = "pi"
 	password = "medprodsdb"
 	dbname   = "medunkaproducts"
 )
 
-const dropExistingTable = `DROP TABLE IF EXISTS products;`
-const createTable = `CREATE TABLE products(barcode bigint, price smallint, mj varchar(5), mjkoef decimal);`
-const importFromCSVToTable = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
+const createTableSQL = `CREATE TABLE products(barcode bigint, price smallint, mj varchar(5), mjkoef decimal);`
+const importFromCSVToTableSQL = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const queryProductInfoSQL = `SELECT price, mj, mjkoef FROM products WHERE barcode = $1;`
 
 func (postgreHandler *PostgreSQLHandler) Connect() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -47,23 +48,30 @@ func (postgreHandler *PostgreSQLHandler) Disconnect() {
 	}
 }
 
-func (postgreHandler *PostgreSQLHandler) CreateTable(){
-	_, err := postgreHandler.db.Exec(createTable)
+func (postgreHandler *PostgreSQLHandler) CreateTable() {
+	_, err := postgreHandler.db.Exec(createTableSQL)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (postgreHandler *PostgreSQLHandler) ImportFromCSV(){
-	_, err := postgreHandler.db.Exec(importFromCSVToTable)
+func (postgreHandler *PostgreSQLHandler) ImportFromCSV() {
+	_, err := postgreHandler.db.Exec(importFromCSVToTableSQL)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (postgreHandler *PostgreSQLHandler) DropTableIfExists(){
-	_, err := postgreHandler.db.Exec(dropExistingTable)
+func (postgreHandler *PostgreSQLHandler) DropTableIfExists() {
+	_, err := postgreHandler.db.Exec(dropExistingTableSQL)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func (postgreHandler *PostgreSQLHandler) QueryProductData(barcode int64) (price int32, mj string, mjkoef float32) {
+	row := postgreHandler.db.QueryRow(queryProductInfoSQL, barcode)
+	if row.Scan(&price, &mj, &mjkoef) == sql.ErrNoRows {
+		return 0,"",0
+	} else {return price, mj, mjkoef}
 }
