@@ -23,6 +23,9 @@ func main() {
 	barcodeController.CreateBarcodeReader(serialHandler.port)
 
 	for {
+		for i := 0; i < 10; i++ {
+			fmt.Println()
+		}
 		barcodeAsByteArray := barcodeController.Read()
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
 		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
@@ -30,7 +33,9 @@ func main() {
 		postgreHandler.Connect()
 		price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsInt)
 		postgreHandler.Disconnect()
-		fmt.Println(price, mj, mjkoef)
 
+		pricePerMj := int32(float32(price)*mjkoef)
+
+		fmt.Println("\n" + "\n" + "\n" + "Cena: " + string(price) + "\n" + "\n" + "Cena za " + mj + ": " + string(pricePerMj))
 	}
 }
