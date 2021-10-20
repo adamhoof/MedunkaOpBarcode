@@ -23,9 +23,9 @@ func main() {
 	barcodeController.CreateBarcodeReader(serialHandler.port)
 
 	for {
+		barcodeAsByteArray := barcodeController.Read()
 		 fmt.Print("\033[H\033[2J")
 
-		barcodeAsByteArray := barcodeController.Read()
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
 		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
 
@@ -35,6 +35,12 @@ func main() {
 
 		pricePerMj := int32(float32(price)*mjkoef)
 
-		fmt.Println("\n" + "\n" + "\n" + "Cena: " + string(price) + "\n" + "\n" + "Cena za " + mj + ": " + string(pricePerMj))
+		fmt.Println("\n" + "\n" + "\n" + "\n" + "\n" + "Cena za kus: ")
+		fmt.Print(price)
+		fmt.Println("\n" +"\n" +"\n")
+		fmt.Print("Cena za ")
+		fmt.Print(mj)
+		fmt.Println(": ")
+		fmt.Println(pricePerMj)
 	}
 }
