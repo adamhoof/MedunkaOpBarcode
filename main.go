@@ -3,13 +3,18 @@ package main
 import (
 	"fmt"
 	_ "github.com/lib/pq"
+	"gopkg.in/gookit/color.v1"
 	"strconv"
 )
+
+var actualPriceColor = color.Style{color.FgRed, color.OpBold, color.BgLightWhite}
+var unitOfMessureColor = color.Style{color.FgLightWhite}
 
 func main() {
 	postgreHandler := PostgreSQLHandler{}
 	serialHandler := SerialHandler{}
 	barcodeController := BarcodeController{}
+	formatter := Formatter{}
 
 	postgreHandler.Connect()
 	postgreHandler.DropTableIfExists()
@@ -24,7 +29,7 @@ func main() {
 
 	for {
 		barcodeAsByteArray := barcodeController.Read()
-		 fmt.Print("\033[H\033[2J")
+		fmt.Print("\033[H\033[2J")
 
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
 		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
@@ -33,14 +38,16 @@ func main() {
 		price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsInt)
 		postgreHandler.Disconnect()
 
-		pricePerMj := int32(float32(price)*mjkoef)
+		stringPrice := formatter.ReturnAsString(price)
+		stringPricePerMj := formatter.ReturnAsString(float32(price) * mjkoef)
 
-		fmt.Println("\n" + "\n" + "\n" + "\n" + "\n" + "Cena za kus: ")
-		fmt.Print(price)
-		fmt.Println("\n" +"\n" +"\n")
-		fmt.Print("Cena za ")
-		fmt.Print(mj)
-		fmt.Println(": ")
-		fmt.Println(pricePerMj)
+		formatter.PrintColoredText(actualPriceColor, "\n"+"\n"+"\n"+"\n"+"\n"+
+			"Cena za kus: "+
+			stringPrice+" Kč"+
+			"\n"+"\n"+"\n")
+
+		formatter.PrintColoredText(unitOfMessureColor, "Přepočet na měrnou j. ("+mj+"): "+
+			stringPricePerMj+" Kč")
+
 	}
 }
