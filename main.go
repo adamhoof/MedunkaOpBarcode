@@ -7,8 +7,8 @@ import (
 	"strconv"
 )
 
-var actualPriceColor = color.Style{color.FgRed, color.OpBold, color.BgLightWhite}
-var unitOfMessureColor = color.Style{color.FgLightWhite}
+var actualPriceColor = color.Style{color.FgRed, color.OpBold}
+var unitOfMessureColor = color.Style{color.FgLightWhite, color.OpItalic}
 
 func main() {
 	postgreHandler := PostgreSQLHandler{}
