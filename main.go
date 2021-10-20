@@ -35,12 +35,12 @@ func main() {
 
 		pricePerMj := int32(float32(price)*mjkoef)
 
-		fmt.Println("\n" + "\n" + "\n" + "\n" + "\n" + "Cena za kus: ")
+		fmt.Println("\n" + "\n" + "\n" + "\n" + "\n" + "\n" + "Cena za kus: ")
 		fmt.Print(price)
+		fmt.Print(" Kč")
 		fmt.Println("\n" +"\n" +"\n")
-		fmt.Print("Cena za ")
-		fmt.Print(mj)
-		fmt.Println(": ")
-		fmt.Println(pricePerMj)
+		fmt.Print("Přepočet na měrnou j. (" + mj + "): ")
+		fmt.Print(pricePerMj)
+		fmt.Print(" Kč")
 	}
 }
