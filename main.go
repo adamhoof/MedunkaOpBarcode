@@ -43,11 +43,11 @@ func main() {
 
 		formatter.PrintColoredText(actualPriceColor, "\n"+"\n"+"\n"+"\n"+"\n"+
 			"Cena za kus: "+
-			stringPrice+" Kč"+
+			stringPrice+"Kč"+
 			"\n"+"\n"+"\n"+"\n"+"\n"+"\n")
 
 		formatter.PrintColoredText(unitOfMessureColor, "Přepočet na měrnouj. ("+mj+"): "+
-			stringPricePerMj+" Kč")
+			stringPricePerMj+"Kč")
 
 	}
 }
