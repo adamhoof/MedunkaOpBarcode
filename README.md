@@ -1,5 +1,5 @@
 # MedunkaOpBarcode
-#### The main goal is to optimize and speed up goods unpacking by not having to put price tags on products, but still being able to show product info to customers.
+#### The main goal is to optimize and speed up goods unpacking by not having to put price tags and unit of messure on products, but still being able to show product info to customers.
 
 - The brain -> RPI Zero W.
 - Program function -> Written in Go. After scanning barcode, either query of local database with product data is done, or request is sent to API endpoint, displayed to user.
