@@ -20,7 +20,6 @@ func main() {
 	postgreHandler.DropTableIfExists()
 	postgreHandler.CreateTable()
 	postgreHandler.ImportFromCSV()
-	postgreHandler.Disconnect()
 
 	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
 	serialHandler.OpenPort()
@@ -34,9 +33,7 @@ func main() {
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
 		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
 
-		postgreHandler.Connect()
 		price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsInt)
-		postgreHandler.Disconnect()
 
 		stringPrice := formatter.ReturnAsString(price)
 		stringPricePerMj := formatter.ReturnAsString(float32(price) * mjkoef)
