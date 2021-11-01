@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 )
 
 type PostgreSQLHandler struct {
@@ -18,8 +19,8 @@ const (
 )
 
 const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
-const createTableSQL = `CREATE TABLE products(barcode bigint, price smallint, mj varchar(5), mjkoef decimal);`
-const importFromCSVToTableSQL = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const createTableSQL = `CREATE TABLE products(barcode text, name text, stock_amount text, price text, mj text, mjkoef decimal);`
+const importFromCSVToTableSQL = `COPY products FROM '/home/adamhoof/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
 const queryProductInfoSQL = `SELECT price, mj, mjkoef FROM products WHERE barcode = $1;`
 
 func (postgreHandler *PostgreSQLHandler) Connect() {
@@ -69,9 +70,9 @@ func (postgreHandler *PostgreSQLHandler) DropTableIfExists() {
 	}
 }
 
-func (postgreHandler *PostgreSQLHandler) QueryProductData(barcode int64) (price int32, mj string, mjkoef float32) {
-	row := postgreHandler.db.QueryRow(queryProductInfoSQL, barcode)
-	if row.Scan(&price, &mj, &mjkoef) == sql.ErrNoRows {
-		return 0,"",0
-	} else {return price, mj, mjkoef}
+func (postgreHandler *PostgreSQLHandler) QueryProductData(barcode int64) (name string, stock string, price string, mj string, mjkoef float64) {
+	row := postgreHandler.db.QueryRow(queryProductInfoSQL, strconv.FormatInt(barcode, 10))
+	if row.Scan(&name ,&stock ,&price, &mj, &mjkoef) == sql.ErrNoRows {
+		return "","","", "",0
+	} else {return name, stock, price, mj, mjkoef}
 }

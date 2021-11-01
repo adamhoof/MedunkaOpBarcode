@@ -7,8 +7,8 @@ import (
 	"strconv"
 )
 
-var actualPriceColor = color.Style{color.FgRed, color.OpBold}
-var unitOfMessureColor = color.Style{color.FgLightWhite, color.OpItalic}
+var actualPriceStyle = color.Style{color.FgRed, color.OpBold}
+var defaultStyle = color.Style{color.FgLightWhite, color.OpItalic}
 
 func main() {
 	postgreHandler := PostgreSQLHandler{}
@@ -33,18 +33,21 @@ func main() {
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
 		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
 
-		price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsInt)
+		name, stock, price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsInt)
 
-		stringPrice := formatter.ReturnAsString(price)
-		stringPricePerMj := formatter.ReturnAsString(float32(price) * mjkoef)
+		priceAsFloat := formatter.ToFloat(price)
+		stringPricePerMj := formatter.ReturnAsString(priceAsFloat * mjkoef)
 
-		formatter.PrintColoredText(actualPriceColor, "\n"+"\n"+"\n"+"\n"+"\n"+
+		formatter.PrintColoredText(defaultStyle, "\n"+"\n"+"\n"+"\n")
+		formatter.PrintColoredText(defaultStyle, name)
+		formatter.PrintColoredText(actualPriceStyle,
 			"Cena za ks: "+
-			stringPrice+"Kč"+
-			"\n"+"\n"+"\n"+"\n"+"\n"+"\n")
+				price+"Kč"+
+				"\n"+"\n"+"\n"+"\n"+"\n")
 
-		formatter.PrintColoredText(unitOfMessureColor, "Přepočet na měrnouj. ("+mj+"): "+
+		formatter.PrintColoredText(defaultStyle, "Přepočet na měrnouj. ("+mj+"): "+
 			stringPricePerMj+"Kč")
-
+		formatter.PrintColoredText(defaultStyle, "\n")
+		formatter.PrintColoredText(defaultStyle, "Stock: " + stock)
 	}
 }

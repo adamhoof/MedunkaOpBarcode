@@ -24,3 +24,16 @@ func (formatter *Formatter) ReturnAsString(value interface{}) string {
 		return ""
 	}
 }
+
+func (formatter *Formatter) ToFloat(value interface{}) float64 {
+	switch value.(type) {
+	case string:
+		floatValue, err := strconv.ParseFloat(value.(string), 8)
+		if err != nil{
+			return 0
+		} 
+		return floatValue
+	default:
+		return 0
+	}
+}
