@@ -5,6 +5,7 @@ import (
 	_ "github.com/lib/pq"
 	"gopkg.in/gookit/color.v1"
 	"strconv"
+	"strings"
 )
 
 var actualPriceStyle = color.Style{color.FgRed, color.OpBold}
@@ -32,17 +33,18 @@ func main() {
 
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
 		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
+		barcodeAsString := formatter.ToString(barcodeAsInt)
 
-		name, stock, price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsInt)
+		name, stock, price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsString)
 
-		priceAsFloat := formatter.ToFloat(price)
-		stringPricePerMj := formatter.ReturnAsString(priceAsFloat * mjkoef)
+		formatedPrice := strings.ReplaceAll(price, ".00 Kč", "")
+		stringPricePerMj := formatter.ToString(formatter.ToFloat(formatedPrice)*mjkoef)
 
 		formatter.PrintColoredText(defaultStyle, "\n"+"\n"+"\n"+"\n")
 		formatter.PrintColoredText(defaultStyle, name)
 		formatter.PrintColoredText(actualPriceStyle,
 			"Cena za ks: "+
-				price+"Kč"+
+				formatedPrice+"Kč"+
 				"\n"+"\n"+"\n"+"\n"+"\n")
 
 		formatter.PrintColoredText(defaultStyle, "Přepočet na měrnouj. ("+mj+"): "+
