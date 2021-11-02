@@ -45,7 +45,7 @@ func main() {
 		formatter.PrintColoredText(actualPriceStyle,
 			"Cena za ks: "+
 				formatedPrice+"Kč"+
-				"\n"+"\n"+"\n"+"\n"+"\n")
+				"\n"+"\n"+"\n"+"\n"+"\n"+"\n")
 
 		formatter.PrintColoredText(defaultStyle, "Přepočet na měrnouj. ("+mj+"): "+
 			stringPricePerMj+"Kč")
