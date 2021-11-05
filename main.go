@@ -38,10 +38,10 @@ func main() {
 		name, stock, price, mj, mjkoef := postgreHandler.QueryProductData(barcodeAsString)
 
 		formatedPrice := strings.ReplaceAll(price, ".00 Kč", "")
-		stringPricePerMj := formatter.ToString(formatter.ToFloat(formatedPrice)*mjkoef)
+		stringPricePerMj := formatter.ToString(formatter.ToFloat(formatedPrice) * mjkoef)
 
 		formatter.PrintColoredText(defaultStyle, "\n"+"\n"+"\n"+"\n")
-		formatter.PrintColoredText(defaultStyle, name)
+		formatter.PrintColoredText(defaultStyle, name+"\n"+"\n")
 		formatter.PrintColoredText(actualPriceStyle,
 			"Cena za ks: "+
 				formatedPrice+"Kč"+
@@ -50,6 +50,6 @@ func main() {
 		formatter.PrintColoredText(defaultStyle, "Přepočet na měrnouj. ("+mj+"): "+
 			stringPricePerMj+"Kč")
 		formatter.PrintColoredText(defaultStyle, "\n")
-		formatter.PrintColoredText(defaultStyle, "Stock: " + stock)
+		formatter.PrintColoredText(defaultStyle, "Stock: "+stock)
 	}
 }

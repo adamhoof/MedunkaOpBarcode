@@ -71,7 +71,9 @@ func (postgreHandler *PostgreSQLHandler) DropTableIfExists() {
 
 func (postgreHandler *PostgreSQLHandler) QueryProductData(barcode string) (name string, stock string, price string, mj string, mjkoef float64) {
 	row := postgreHandler.db.QueryRow(queryProductInfoSQL, barcode)
-	if row.Scan(&name ,&stock ,&price, &mj, &mjkoef) == sql.ErrNoRows {
-		return "","","", "",0
-	} else {return name, stock, price, mj, mjkoef}
+	if row.Scan(&name, &stock, &price, &mj, &mjkoef) == sql.ErrNoRows {
+		return "", "", "", "", 0
+	} else {
+		return name, stock, price, mj, mjkoef
+	}
 }
