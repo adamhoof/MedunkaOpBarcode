@@ -41,8 +41,8 @@ func main() {
 		stringPricePerMj := formatter.ToString(formatter.ToFloat(formatedPrice) * mjkoef)
 
 		formatter.PrintColoredText(defaultStyle, name)
-		fmt.Print("")
-		fmt.Print("")
+		fmt.Println("")
+		fmt.Println("")
 		formatter.PrintColoredText(actualPriceStyle,
 			"Cena za ks: "+
 				formatedPrice+"Kč"+
