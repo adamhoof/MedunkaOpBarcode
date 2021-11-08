@@ -40,7 +40,6 @@ func main() {
 		formatedPrice := strings.ReplaceAll(price, ".00 Kč", "")
 		stringPricePerMj := formatter.ToString(formatter.ToFloat(formatedPrice) * mjkoef)
 
-		formatter.PrintColoredText(defaultStyle, "\n"+"\n"+"\n"+"\n")
 		formatter.PrintColoredText(defaultStyle, name+"\n"+"\n")
 		formatter.PrintColoredText(actualPriceStyle,
 			"Cena za ks: "+
