@@ -2,20 +2,14 @@ package SerialCommunication
 
 import "github.com/tarm/serial"
 
-type SerialHandler struct {
-	config serial.Config
-	port   *serial.Port
+func CreatePortConfig(portName string, baud int) serial.Config {
+	return serial.Config{Name: portName, Baud: baud}
 }
 
-func (serialHandler *SerialHandler) PortConfig(port string, baud int) {
-	serialHandler.config.Name = port
-	serialHandler.config.Baud = baud
-}
-
-func (serialHandler *SerialHandler) OpenPort() {
-	port, err := serial.OpenPort(&serialHandler.config)
+func OpenPort(config serial.Config) *serial.Port {
+	port, err := serial.OpenPort(&config)
 	if err != nil {
 		panic(err)
 	}
-	serialHandler.port = port
+	return port
 }

@@ -18,8 +18,6 @@ var defaultStyle = color.Style{color.FgLightWhite, color.OpItalic}
 
 func main() {
 	postgreHandler := Database.PostgreSQLHandler{}
-	serialHandler := SerialCommunication.SerialHandler{}
-	var reader *bufio.Reader
 	formatter := TextFormatting.Formatter{}
 
 	postgreHandler.Connect()
@@ -27,10 +25,11 @@ func main() {
 	postgreHandler.CreateTable()
 	postgreHandler.ImportFromCSV()
 
-	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
-	serialHandler.OpenPort()
+	portConfig := SerialCommunication.CreatePortConfig("/dev/ttyAMA0", 9600)
+	port := SerialCommunication.OpenPort(portConfig)
 
-	Barcode.AssignPort(reader, serialHandler.port)
+	var reader *bufio.Reader
+	Barcode.AssignPort(reader, port)
 
 	for {
 		barcodeAsByteArray := Barcode.Read(reader)
