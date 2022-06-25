@@ -1,10 +1,10 @@
-   package main
+package SerialCommunication
 
 import "github.com/tarm/serial"
 
 type SerialHandler struct {
 	config serial.Config
-	port *serial.Port
+	port   *serial.Port
 }
 
 func (serialHandler *SerialHandler) PortConfig(port string, baud int) {
@@ -12,7 +12,7 @@ func (serialHandler *SerialHandler) PortConfig(port string, baud int) {
 	serialHandler.config.Baud = baud
 }
 
-func (serialHandler *SerialHandler) OpenPort(){
+func (serialHandler *SerialHandler) OpenPort() {
 	port, err := serial.OpenPort(&serialHandler.config)
 	if err != nil {
 		panic(err)
