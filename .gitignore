@@ -1,3 +1,4 @@
 .idea
 products.csv
 Products/*
+pkg/Env
