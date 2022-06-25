@@ -19,7 +19,7 @@ const (
 
 const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
 const createTableSQL = `CREATE TABLE products(barcode text, name text, stock text, price text, mj text, mjkoef decimal);`
-const importFromCSVToTableSQL = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const importFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
 const queryProductInfoSQL = `SELECT name, stock, price, mj, mjkoef FROM products WHERE barcode = $1;`
 
 func (postgreHandler *PostgreSQLHandler) Connect() {
