@@ -1,6 +1,11 @@
 package main
 
 import (
+	"MedunkaOpBarcode/pkg/Barcode"
+	"MedunkaOpBarcode/pkg/Database"
+	"MedunkaOpBarcode/pkg/SerialCommunication"
+	"MedunkaOpBarcode/pkg/TextFormatting"
+	"bufio"
 	"fmt"
 	_ "github.com/lib/pq"
 	"gopkg.in/gookit/color.v1"
@@ -12,10 +17,10 @@ var actualPriceStyle = color.Style{color.FgRed, color.OpBold}
 var defaultStyle = color.Style{color.FgLightWhite, color.OpItalic}
 
 func main() {
-	postgreHandler := PostgreSQLHandler{}
-	serialHandler := SerialHandler{}
-	barcodeController := BarcodeController{}
-	formatter := Formatter{}
+	postgreHandler := Database.PostgreSQLHandler{}
+	serialHandler := SerialCommunication.SerialHandler{}
+	var reader *bufio.Reader
+	formatter := TextFormatting.Formatter{}
 
 	postgreHandler.Connect()
 	postgreHandler.DropTableIfExists()
@@ -25,10 +30,10 @@ func main() {
 	serialHandler.PortConfig("/dev/ttyAMA0", 9600)
 	serialHandler.OpenPort()
 
-	barcodeController.CreateBarcodeReader(serialHandler.port)
+	Barcode.AssignPort(reader, serialHandler.port)
 
 	for {
-		barcodeAsByteArray := barcodeController.Read()
+		barcodeAsByteArray := Barcode.Read(reader)
 		fmt.Print("\033[H\033[2J")
 
 		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]

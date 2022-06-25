@@ -5,16 +5,12 @@ import (
 	"github.com/tarm/serial"
 )
 
-type BarcodeController struct {
-	barcode *bufio.Reader
+func AssignPort(reader *bufio.Reader, port *serial.Port) {
+	reader = bufio.NewReader(port)
 }
 
-func (barcodeController *BarcodeController) CreateBarcodeReader(port *serial.Port) {
-	barcodeController.barcode = bufio.NewReader(port)
-}
-
-func (barcodeController *BarcodeController) Read() []byte {
-	barcode, err := barcodeController.barcode.ReadBytes('\x0d')
+func Read(reader *bufio.Reader) []byte {
+	barcode, err := reader.ReadBytes('\x0d')
 	if err != nil {
 		panic(err)
 	}
