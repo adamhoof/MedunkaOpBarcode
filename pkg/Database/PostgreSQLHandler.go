@@ -2,75 +2,29 @@ package Database
 
 import (
 	"database/sql"
-	"fmt"
 )
 
-type PostgreSQLHandler struct {
-	db *sql.DB
-}
+const DropExistingTableSQL = `DROP TABLE IF EXISTS products;`
+const CreateTableSQL = `CREATE TABLE products(barcode text, name text, stock text, price text, mj text, mjkoef decimal);`
+const ImportFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
+const QueryProductDataSQL = `SELECT name, stock, price, mj, mjkoef FROM products WHERE barcode = $1;`
 
-const (
-	host     = "10.0.0.2"
-	port     = 5432
-	user     = "pi"
-	password = "medprodsdb"
-	dbname   = "medunkaproducts"
-)
-
-const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
-const createTableSQL = `CREATE TABLE products(barcode text, name text, stock text, price text, mj text, mjkoef decimal);`
-const importFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
-const queryProductInfoSQL = `SELECT name, stock, price, mj, mjkoef FROM products WHERE barcode = $1;`
-
-func (postgreHandler *PostgreSQLHandler) Connect() {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s",
-		host, port, user, password, dbname)
-
-	var err error
-	postgreHandler.db, err = sql.Open("postgres", psqlInfo)
+func Connect(db *sql.DB, config string) {
+	db, err := sql.Open("postgres", config)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (postgreHandler *PostgreSQLHandler) TestConnection() {
-	result := postgreHandler.db.Ping()
-	if result != nil {
-		panic(result)
-	}
-}
-
-func (postgreHandler *PostgreSQLHandler) Disconnect() {
-	err := postgreHandler.db.Close()
+func ExecuteStatement(db *sql.DB, statement string) {
+	_, err := db.Exec(statement)
 	if err != nil {
-		panic(err)
+		return
 	}
 }
 
-func (postgreHandler *PostgreSQLHandler) CreateTable() {
-	_, err := postgreHandler.db.Exec(createTableSQL)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func (postgreHandler *PostgreSQLHandler) ImportFromCSV() {
-	_, err := postgreHandler.db.Exec(importFromCSVToTableSQL)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func (postgreHandler *PostgreSQLHandler) DropTableIfExists() {
-	_, err := postgreHandler.db.Exec(dropExistingTableSQL)
-	if err != nil {
-		panic(err)
-	}
-}
-
-func (postgreHandler *PostgreSQLHandler) QueryProductData(barcode string) (name string, stock string, price string, mj string, mjkoef float64) {
-	row := postgreHandler.db.QueryRow(queryProductInfoSQL, barcode)
+func QueryProductData(db *sql.DB, barcode string) (name string, stock string, price string, mj string, mjkoef float64) {
+	row := db.QueryRow(QueryProductDataSQL, barcode)
 	if row.Scan(&name, &stock, &price, &mj, &mjkoef) == sql.ErrNoRows {
 		return "", "", "", "", 0
 	} else {
