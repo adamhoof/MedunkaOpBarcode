@@ -1,4 +1,4 @@
-package TextFormatting
+package Formatting
 
 import (
 	"fmt"
@@ -6,14 +6,14 @@ import (
 	"strconv"
 )
 
-type Formatter struct {
-}
+var ActualPriceStyle = color.Style{color.FgRed, color.OpBold}
+var DefaultStyle = color.Style{color.FgLightWhite, color.OpItalic}
 
-func (formatter *Formatter) PrintColoredText(style color.Style, text string) {
+func PrintStyledText(style color.Style, text string) {
 	style.Println(text)
 }
 
-func (formatter *Formatter) ToString(value interface{}) string {
+func ToString(value interface{}) string {
 
 	switch value.(type) {
 	case int32:
@@ -27,7 +27,7 @@ func (formatter *Formatter) ToString(value interface{}) string {
 	}
 }
 
-func (formatter *Formatter) ToFloat(value interface{}) float64 {
+func ToFloat(value interface{}) float64 {
 	switch value.(type) {
 	case string:
 		floatValue, err := strconv.ParseFloat(value.(string), 8)
