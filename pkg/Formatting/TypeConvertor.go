@@ -23,28 +23,13 @@ func ByteArrayToString(arrayOfBytes []byte) string {
 }
 
 func FloatToString(value interface{}) string {
-
-	switch value.(type) {
-	case int32:
-		return strconv.FormatInt(int64(value.(int32)), 10)
-	case float64:
-		return fmt.Sprintf("%.2f", value.(float64))
-	case int64:
-		return strconv.FormatInt(value.(int64), 10)
-	default:
-		return ""
-	}
+	return fmt.Sprintf("%.2f", value.(float64))
 }
 
 func StringToFloat(value interface{}) float64 {
-	switch value.(type) {
-	case string:
-		floatValue, err := strconv.ParseFloat(value.(string), 8)
-		if err != nil {
-			return 0
-		}
-		return floatValue
-	default:
+	floatValue, err := strconv.ParseFloat(value.(string), 8)
+	if err != nil {
 		return 0
 	}
+	return floatValue
 }
