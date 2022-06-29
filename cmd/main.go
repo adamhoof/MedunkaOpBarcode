@@ -6,7 +6,6 @@ import (
 	"MedunkaOpBarcode/pkg/Formatting"
 	"MedunkaOpBarcode/pkg/SerialCommunication"
 	"bufio"
-	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
 	"os"
@@ -15,19 +14,20 @@ import (
 )
 
 func main() {
-	dbPort, err := strconv.Atoi(os.Getenv("dbPort"))
-	if err != nil {
-		panic(err)
+	dbPort := Formatting.StringToInt(os.Getenv("dbPort"))
+	dbConfig := Database.DBConfig{
+		Host:     os.Getenv("host"),
+		Port:     dbPort,
+		User:     os.Getenv("user"),
+		Password: os.Getenv("password"),
+		DBName:   os.Getenv("dbname"),
 	}
-	dbConfig := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s",
-		os.Getenv("host"), dbPort, os.Getenv("user"), os.Getenv("password"), os.Getenv("dbname"))
-
-	var db *sql.DB
-	Database.Connect(db, dbConfig)
-	Database.ExecuteStatement(db, Database.DropExistingTableSQL)
-	Database.ExecuteStatement(db, Database.CreateTableSQL)
-	Database.ExecuteStatement(db, Database.ImportFromCSVToTableSQL)
+	var postgresDBHandler Database.PostgresDBHandler
+	postgresDBHandler.GrabConfig(&dbConfig)
+	postgresDBHandler.Connect()
+	postgresDBHandler.ExecuteStatement(Database.DropExistingTableSQL)
+	postgresDBHandler.ExecuteStatement(Database.CreateTableSQL)
+	postgresDBHandler.ExecuteStatement(Database.ImportFromCSVToTableSQL)
 
 	portConfig := SerialCommunication.CreatePortConfig("/dev/ttyAMA0", 9600)
 	serialPort := SerialCommunication.OpenPort(portConfig)
@@ -43,7 +43,7 @@ func main() {
 		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
 		barcodeAsString := Formatting.ToString(barcodeAsInt)
 
-		name, stock, price, mj, mjkoef := Database.QueryProductData(db, barcodeAsString)
+		name, stock, price, mj, mjkoef := postgresDBHandler.QueryProductData(barcodeAsString)
 
 		formatedPrice := strings.ReplaceAll(price, ".00 Kč", "")
 		stringPricePerMj := Formatting.ToString(Formatting.ToFloat(formatedPrice) * mjkoef)
