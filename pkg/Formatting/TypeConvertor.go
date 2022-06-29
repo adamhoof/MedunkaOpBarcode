@@ -22,12 +22,12 @@ func ByteArrayToString(arrayOfBytes []byte) string {
 	return strconv.FormatInt(parseInt, 10)
 }
 
-func FloatToString(value interface{}) string {
-	return fmt.Sprintf("%.2f", value.(float64))
+func FloatToString(f float64) string {
+	return fmt.Sprintf("%.2f", f)
 }
 
-func StringToFloat(value interface{}) float64 {
-	floatValue, err := strconv.ParseFloat(value.(string), 8)
+func StringToFloat(s string) float64 {
+	floatValue, err := strconv.ParseFloat(s, 8)
 	if err != nil {
 		return 0
 	}
