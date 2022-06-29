@@ -9,7 +9,6 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -39,26 +38,23 @@ func main() {
 		barcodeAsByteArray := Barcode.Read(reader)
 		fmt.Print("\033[H\033[2J")
 
-		barcodeAsByteArray = barcodeAsByteArray[:len(barcodeAsByteArray)-1]
-		barcodeAsInt, _ := strconv.ParseInt(string(barcodeAsByteArray), 10, 64)
-		barcodeAsString := Formatting.ToString(barcodeAsInt)
+		barcodeAsString := Formatting.ByteArrayToString(barcodeAsByteArray)
 
 		name, stock, price, mj, mjkoef := postgresDBHandler.QueryProductData(barcodeAsString)
 
 		formatedPrice := strings.ReplaceAll(price, ".00 Kč", "")
-		stringPricePerMj := Formatting.ToString(Formatting.ToFloat(formatedPrice) * mjkoef)
+		stringPricePerMj := Formatting.FloatToString(Formatting.StringToFloat(formatedPrice) * mjkoef)
 
-		Formatting.PrintStyledText(Formatting.DefaultStyle, name)
-		fmt.Println("")
-		fmt.Println("")
-		Formatting.PrintStyledText(Formatting.ActualPriceStyle,
+		Formatting.PrintStyledText(Formatting.Default, name)
+		Formatting.PrintSpaces(2)
+		Formatting.PrintStyledText(Formatting.BoldRed,
 			"Cena za ks: "+
 				formatedPrice+"Kč"+
 				"\n"+"\n")
 
-		Formatting.PrintStyledText(Formatting.DefaultStyle, "Přepočet na měrnouj. ("+mj+"): "+
+		Formatting.PrintStyledText(Formatting.Default, "Přepočet na měrnouj. ("+mj+"): "+
 			stringPricePerMj+"Kč")
-		Formatting.PrintStyledText(Formatting.DefaultStyle, "\n")
-		Formatting.PrintStyledText(Formatting.DefaultStyle, "Stock: "+stock)
+		Formatting.PrintStyledText(Formatting.Default, "\n")
+		Formatting.PrintStyledText(Formatting.Default, "Stock: "+stock)
 	}
 }
