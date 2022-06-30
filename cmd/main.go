@@ -7,6 +7,7 @@ import (
 	"MedunkaOpBarcode/pkg/SerialCommunication"
 	"MedunkaOpBarcode/pkg/TypeConvertor"
 	_ "github.com/lib/pq"
+	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
 	"os"
 	"strings"
@@ -36,7 +37,7 @@ func main() {
 	postgresDBHandler.ExecuteStatement(createTableSQL)
 	postgresDBHandler.ExecuteStatement(importFromCSVToTableSQL)
 
-	serialPort := serialcommunication.OpenPort("/dev/ttyAMA0", 9600)
+	serialPort := serialcommunication.OpenPort(&serial.Config{Name: "/dev/ttyAMA0", Baud: 9600})
 
 	var barcodeReaderHandler barcode.ReaderHandler
 	barcodeReaderHandler.GetPort(serialPort)
