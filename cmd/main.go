@@ -2,12 +2,14 @@ package main
 
 import (
 	"MedunkaOpBarcode/pkg/Barcode"
+	"MedunkaOpBarcode/pkg/CLIArtist"
 	"MedunkaOpBarcode/pkg/Database"
-	"MedunkaOpBarcode/pkg/Formatting"
 	"MedunkaOpBarcode/pkg/SerialCommunication"
+	"MedunkaOpBarcode/pkg/TypeConvertor"
 	"bufio"
 	"fmt"
 	_ "github.com/lib/pq"
+	"gopkg.in/gookit/color.v1"
 	"os"
 	"strings"
 )
@@ -17,8 +19,11 @@ const createTableSQL = `CREATE TABLE products(barcode text, name text, stock tex
 const importFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
 const queryProductDataSQL = `SELECT name, stock, price, mj, mjkoef FROM products WHERE barcode = $1;`
 
+var boldRed = color.Style{color.FgRed, color.OpBold}
+var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}
+
 func main() {
-	dbPort := Formatting.StringToInt(os.Getenv("dbPort"))
+	dbPort := TypeConvertor.StringToInt(os.Getenv("dbPort"))
 	dbConfig := Database.DBConfig{
 		Host:     os.Getenv("host"),
 		Port:     dbPort,
@@ -43,23 +48,23 @@ func main() {
 		barcodeAsByteArray := Barcode.Read(reader)
 		fmt.Print("\033[H\033[2J")
 
-		barcodeAsString := Formatting.ByteArrayToString(barcodeAsByteArray)
+		barcodeAsString := TypeConvertor.ByteArrayToString(barcodeAsByteArray)
 
 		name, stock, price, mj, mjKoef := postgresDBHandler.QueryProductData(queryProductDataSQL, barcodeAsString)
 
-		formattedPrice := strings.ReplaceAll(price, ".00 Kč", "")
-		stringPricePerMj := Formatting.FloatToString(Formatting.StringToFloat(formattedPrice) * mjKoef)
+		strPriceWithoutSuffix := strings.ReplaceAll(price, ".00 Kč", "")
+		strPricePerMj := TypeConvertor.FloatToString(TypeConvertor.StringToFloat(strPriceWithoutSuffix) * mjKoef)
 
-		Formatting.PrintStyledText(Formatting.Default, name)
-		Formatting.PrintSpaces(2)
-		Formatting.PrintStyledText(Formatting.BoldRed,
+		CLIArtist.PrintStyledText(italicWhite, name)
+		CLIArtist.PrintSpaces(2)
+		CLIArtist.PrintStyledText(boldRed,
 			"Cena za ks: "+
-				formattedPrice+"Kč"+
+				strPriceWithoutSuffix+"Kč"+
 				"\n"+"\n")
 
-		Formatting.PrintStyledText(Formatting.Default, "Přepočet na měrnouj. ("+mj+"): "+
-			stringPricePerMj+"Kč")
-		Formatting.PrintStyledText(Formatting.Default, "\n")
-		Formatting.PrintStyledText(Formatting.Default, "Stock: "+stock)
+		CLIArtist.PrintStyledText(italicWhite, "Přepočet na měrnouj. ("+mj+"): "+
+			strPricePerMj+"Kč")
+		CLIArtist.PrintStyledText(italicWhite, "\n")
+		CLIArtist.PrintStyledText(italicWhite, "Stock: "+stock)
 	}
 }

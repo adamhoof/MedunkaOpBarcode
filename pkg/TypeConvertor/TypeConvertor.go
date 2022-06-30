@@ -1,4 +1,4 @@
-package Formatting
+package TypeConvertor
 
 import (
 	"fmt"
