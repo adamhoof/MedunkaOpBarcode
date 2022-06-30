@@ -36,8 +36,7 @@ func main() {
 	postgresDBHandler.ExecuteStatement(createTableSQL)
 	postgresDBHandler.ExecuteStatement(importFromCSVToTableSQL)
 
-	serialPortConfig := serialcommunication.CreatePortConfig("/dev/ttyAMA0", 9600)
-	serialPort := serialcommunication.OpenPort(serialPortConfig)
+	serialPort := serialcommunication.OpenPort("/dev/ttyAMA0", 9600)
 
 	var barcodeReaderHandler barcode.ReaderHandler
 	barcodeReaderHandler.GetPort(serialPort)
