@@ -5,29 +5,28 @@ import (
 	"strconv"
 )
 
-func StringToInt(s string) (i int) {
-	var err error
-	i, err = strconv.Atoi(s)
+func StringToInt(str string) int {
+	integer, err := strconv.Atoi(str)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return i
+	return integer
 }
 
 func ByteArrayToString(arrayOfBytes []byte) string {
-	parseInt, err := strconv.ParseInt(string(arrayOfBytes), 10, 64)
+	str, err := strconv.ParseInt(string(arrayOfBytes), 10, 64)
 	if err != nil {
 		fmt.Println(err)
 	}
-	return strconv.FormatInt(parseInt, 10)
+	return strconv.FormatInt(str, 10)
 }
 
 func FloatToString(f float64) string {
 	return fmt.Sprintf("%.2f", f)
 }
 
-func StringToFloat(s string) float64 {
-	floatValue, err := strconv.ParseFloat(s, 8)
+func StringToFloat(str string) float64 {
+	floatValue, err := strconv.ParseFloat(str, 8)
 	if err != nil {
 		return 0
 	}
