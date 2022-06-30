@@ -12,6 +12,11 @@ import (
 	"strings"
 )
 
+const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
+const createTableSQL = `CREATE TABLE products(barcode text, name text, stock text, price text, mj text, mjkoef decimal);`
+const importFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
+const queryProductDataSQL = `SELECT name, stock, price, mj, mjkoef FROM products WHERE barcode = $1;`
+
 func main() {
 	dbPort := Formatting.StringToInt(os.Getenv("dbPort"))
 	dbConfig := Database.DBConfig{
@@ -24,9 +29,9 @@ func main() {
 	var postgresDBHandler Database.PostgresDBHandler
 	postgresDBHandler.GrabConfig(&dbConfig)
 	postgresDBHandler.Connect()
-	postgresDBHandler.ExecuteStatement(Database.DropExistingTableSQL)
-	postgresDBHandler.ExecuteStatement(Database.CreateTableSQL)
-	postgresDBHandler.ExecuteStatement(Database.ImportFromCSVToTableSQL)
+	postgresDBHandler.ExecuteStatement(dropExistingTableSQL)
+	postgresDBHandler.ExecuteStatement(createTableSQL)
+	postgresDBHandler.ExecuteStatement(importFromCSVToTableSQL)
 
 	portConfig := SerialCommunication.CreatePortConfig("/dev/ttyAMA0", 9600)
 	serialPort := SerialCommunication.OpenPort(portConfig)
@@ -40,16 +45,16 @@ func main() {
 
 		barcodeAsString := Formatting.ByteArrayToString(barcodeAsByteArray)
 
-		name, stock, price, mj, mjkoef := postgresDBHandler.QueryProductData(barcodeAsString)
+		name, stock, price, mj, mjKoef := postgresDBHandler.QueryProductData(queryProductDataSQL, barcodeAsString)
 
-		formatedPrice := strings.ReplaceAll(price, ".00 Kč", "")
-		stringPricePerMj := Formatting.FloatToString(Formatting.StringToFloat(formatedPrice) * mjkoef)
+		formattedPrice := strings.ReplaceAll(price, ".00 Kč", "")
+		stringPricePerMj := Formatting.FloatToString(Formatting.StringToFloat(formattedPrice) * mjKoef)
 
 		Formatting.PrintStyledText(Formatting.Default, name)
 		Formatting.PrintSpaces(2)
 		Formatting.PrintStyledText(Formatting.BoldRed,
 			"Cena za ks: "+
-				formatedPrice+"Kč"+
+				formattedPrice+"Kč"+
 				"\n"+"\n")
 
 		Formatting.PrintStyledText(Formatting.Default, "Přepočet na měrnouj. ("+mj+"): "+
