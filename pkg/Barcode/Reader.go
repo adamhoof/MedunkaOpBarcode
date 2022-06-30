@@ -2,12 +2,21 @@ package barcode
 
 import (
 	"bufio"
+	"github.com/tarm/serial"
 )
 
-func Read(reader *bufio.Reader) []byte {
-	barcode, err := reader.ReadBytes('\x0d')
+type ReaderHandler struct {
+	reader *bufio.Reader
+}
+
+func (handler *ReaderHandler) ReadUntilDelimiter(delimiter byte) []byte {
+	barcode, err := handler.reader.ReadBytes(delimiter)
 	if err != nil {
 		panic(err)
 	}
 	return barcode
+}
+
+func (handler *ReaderHandler) GetPort(port *serial.Port) {
+	handler.reader = bufio.NewReader(port)
 }

@@ -6,7 +6,6 @@ import (
 	"MedunkaOpBarcode/pkg/Database"
 	"MedunkaOpBarcode/pkg/SerialCommunication"
 	"MedunkaOpBarcode/pkg/TypeConvertor"
-	"bufio"
 	_ "github.com/lib/pq"
 	"gopkg.in/gookit/color.v1"
 	"os"
@@ -40,11 +39,11 @@ func main() {
 	serialPortConfig := serialcommunication.CreatePortConfig("/dev/ttyAMA0", 9600)
 	serialPort := serialcommunication.OpenPort(serialPortConfig)
 
-	var reader *bufio.Reader
-	barcode.AssignPort(reader, serialPort)
+	var barcodeReaderHandler barcode.ReaderHandler
+	barcodeReaderHandler.GetPort(serialPort)
 
 	for {
-		barcodeAsByteArray := barcode.Read(reader)
+		barcodeAsByteArray := barcodeReaderHandler.ReadUntilDelimiter('\x0d')
 		artist.ClearTerminal()
 
 		barcodeAsString := typeconv.ByteArrayToString(barcodeAsByteArray)
@@ -59,11 +58,11 @@ func main() {
 		artist.PrintStyledText(boldRed,
 			"Cena za ks: "+
 				strPriceWithoutSuffix+"Kč"+
-				"\n"+"\n")
+				"\n"+"\n") //TODO replace?
 
 		artist.PrintStyledText(italicWhite, "Přepočet na měrnouj. ("+unitOfMeasure+"): "+
 			strPricePerMj+"Kč")
-		artist.PrintStyledText(italicWhite, "\n")
+		artist.PrintStyledText(italicWhite, "\n") //TODO replace?
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
 	}
 }
