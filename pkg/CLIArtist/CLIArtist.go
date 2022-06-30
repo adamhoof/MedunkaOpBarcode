@@ -1,4 +1,4 @@
-package CLIArtist
+package artist
 
 import (
 	"fmt"
@@ -14,4 +14,8 @@ func PrintSpaces(numSpaces uint8) {
 	for ; i < numSpaces; i++ {
 		fmt.Println("")
 	}
+}
+
+func ClearTerminal() {
+	fmt.Print("\033[H\033[2J")
 }

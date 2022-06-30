@@ -1,4 +1,4 @@
-package Barcode
+package barcode
 
 import (
 	"bufio"

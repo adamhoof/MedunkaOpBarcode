@@ -1,4 +1,4 @@
-package TypeConvertor
+package typeconv
 
 import (
 	"fmt"

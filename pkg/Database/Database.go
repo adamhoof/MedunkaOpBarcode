@@ -1,4 +1,4 @@
-package Database
+package database
 
 type Database interface {
 	GrabConfig(config *DBConfig)
