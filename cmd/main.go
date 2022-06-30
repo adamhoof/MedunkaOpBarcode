@@ -49,10 +49,10 @@ func main() {
 
 		barcodeAsString := typeconv.ByteArrayToString(barcodeAsByteArray)
 
-		name, stock, price, mj, mjKoef := postgresDBHandler.QueryProductData(queryProductDataSQL, barcodeAsString)
+		name, stock, price, unitOfMeasure, unitOfMeasureKoef := postgresDBHandler.QueryProductData(queryProductDataSQL, barcodeAsString)
 
 		strPriceWithoutSuffix := strings.ReplaceAll(price, ".00 Kč", "")
-		strPricePerMj := typeconv.FloatToString(typeconv.StringToFloat(strPriceWithoutSuffix) * mjKoef)
+		strPricePerMj := typeconv.FloatToString(typeconv.StringToFloat(strPriceWithoutSuffix) * unitOfMeasureKoef)
 
 		artist.PrintStyledText(italicWhite, name)
 		artist.PrintSpaces(2)
@@ -61,7 +61,7 @@ func main() {
 				strPriceWithoutSuffix+"Kč"+
 				"\n"+"\n")
 
-		artist.PrintStyledText(italicWhite, "Přepočet na měrnouj. ("+mj+"): "+
+		artist.PrintStyledText(italicWhite, "Přepočet na měrnouj. ("+unitOfMeasure+"): "+
 			strPricePerMj+"Kč")
 		artist.PrintStyledText(italicWhite, "\n")
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
