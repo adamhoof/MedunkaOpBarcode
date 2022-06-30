@@ -5,7 +5,7 @@ import (
 	"MedunkaOpBarcode/pkg/CLIArtist"
 	"MedunkaOpBarcode/pkg/Database"
 	"MedunkaOpBarcode/pkg/SerialCommunication"
-	"MedunkaOpBarcode/pkg/TypeConvertor"
+	"MedunkaOpBarcode/pkg/TypeConversion"
 	_ "github.com/lib/pq"
 	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
@@ -14,9 +14,9 @@ import (
 )
 
 const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
-const createTableSQL = `CREATE TABLE products(Barcode text, name text, stock text, price text, mj text, mjkoef decimal);`
+const createTableSQL = `CREATE TABLE products(Barcode text, name text, stock text, price text, unitOfMeasure text, unitOfMeasureKoef decimal);`
 const importFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
-const queryProductDataSQL = `SELECT name, stock, price, mj, mjkoef FROM products WHERE Barcode = $1;`
+const queryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE Barcode = $1;`
 
 var boldRed = color.Style{color.FgRed, color.OpBold}
 var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}
