@@ -1,12 +1,13 @@
 package main
 
 import (
-	"MedunkaOpBarcode/pkg/Barcode"
-	"MedunkaOpBarcode/pkg/CLIArtist"
-	"MedunkaOpBarcode/pkg/Database"
-	"MedunkaOpBarcode/pkg/SerialCommunication"
-	"MedunkaOpBarcode/pkg/TypeConversion"
-	_ "github.com/lib/pq"
+	barcode "MedunkaOPBarcode/pkg/Barcode"
+	artist "MedunkaOPBarcode/pkg/CLIArtist"
+	database "MedunkaOPBarcode/pkg/Database"
+	env "MedunkaOPBarcode/pkg/Env"
+	serialcommunication "MedunkaOPBarcode/pkg/SerialCommunication"
+	telegrambot "MedunkaOPBarcode/pkg/TelegramBot"
+	typeconv "MedunkaOPBarcode/pkg/TypeConversion"
 	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
 	"os"
@@ -22,6 +23,12 @@ var boldRed = color.Style{color.FgRed, color.OpBold}
 var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}
 
 func main() {
+	env.SetEnv()
+
+	botHandler := telegrambot.Handler{}
+	botHandler.SetToken(os.Getenv("botToken"))
+	botHandler.StartBot()
+
 	dbPort := typeconv.StringToInt(os.Getenv("dbPort"))
 	dbConfig := database.DBConfig{
 		Host:     os.Getenv("host"),
