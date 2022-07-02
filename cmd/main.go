@@ -1,17 +1,10 @@
 package main
 
 import (
-	barcode "MedunkaOPBarcode/pkg/Barcode"
-	artist "MedunkaOPBarcode/pkg/CLIArtist"
-	database "MedunkaOPBarcode/pkg/Database"
 	env "MedunkaOPBarcode/pkg/Env"
-	serialcommunication "MedunkaOPBarcode/pkg/SerialCommunication"
 	telegrambot "MedunkaOPBarcode/pkg/TelegramBot"
-	typeconv "MedunkaOPBarcode/pkg/TypeConversion"
-	"github.com/tarm/serial"
-	"gopkg.in/gookit/color.v1"
 	"os"
-	"strings"
+	"sync"
 )
 
 const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
@@ -19,17 +12,23 @@ const createTableSQL = `CREATE TABLE products(Barcode text, name text, stock tex
 const importFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
 const queryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE Barcode = $1;`
 
-var boldRed = color.Style{color.FgRed, color.OpBold}
-var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}
+/*var boldRed = color.Style{color.FgRed, color.OpBold}
+var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}*/
 
 func main() {
 	env.SetEnv()
 
-	botHandler := telegrambot.Handler{}
+	skladBois := telegrambot.User{Id: "-1001671432440"}
+	botHandler := telegrambot.Handler{Owner: skladBois}
 	botHandler.SetToken(os.Getenv("botToken"))
-	botHandler.StartBot()
-
-	dbPort := typeconv.StringToInt(os.Getenv("dbPort"))
+	botHandler.OnUploadFileAction()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		botHandler.StartBot()
+	}()
+	wg.Wait()
+	/*dbPort := typeconv.StringToInt(os.Getenv("dbPort"))
 	dbConfig := database.DBConfig{
 		Host:     os.Getenv("host"),
 		Port:     dbPort,
@@ -71,5 +70,5 @@ func main() {
 			strPricePerMj+"Kč")
 		artist.PrintStyledText(italicWhite, "\n") //TODO replace?
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
-	}
+	}*/
 }

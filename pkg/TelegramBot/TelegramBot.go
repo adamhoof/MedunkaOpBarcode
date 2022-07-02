@@ -7,12 +7,13 @@ import (
 )
 
 type Handler struct {
-	bot *tb.Bot
+	Bot   *tb.Bot
+	Owner User
 }
 
 func (handler *Handler) SetToken(token string) {
 	var err error
-	handler.bot, err = tb.NewBot(tb.Settings{
+	handler.Bot, err = tb.NewBot(tb.Settings{
 		Token: token,
 		Poller: &tb.LongPoller{
 			Timeout: 10 * time.Second,
@@ -24,12 +25,6 @@ func (handler *Handler) SetToken(token string) {
 	fmt.Println("handler token valid")
 }
 
-func (handler *Handler) OnUploadFileAction() {
-	handler.bot.Handle(tb.OnDocument, func(c tb.Context) error {
-		return nil //TODO implement
-	})
-}
-
 func (handler *Handler) StartBot() {
-	handler.bot.Start()
+	handler.Bot.Start()
 }
