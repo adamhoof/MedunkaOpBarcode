@@ -10,6 +10,11 @@ type PostgresDBHandler struct {
 	config string
 }
 
+const DropExistingTableSQL = `DROP TABLE IF EXISTS products;`
+const CreateTableSQL = `CREATE TABLE products(Barcode text, name text, stock text, price text, unitOfMeasure text, unitOfMeasureKoef decimal);`
+const ImportFromCSVToTableSQL = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const QueryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE Barcode = $1;`
+
 func (handler *PostgresDBHandler) GrabConfig(config *DBConfig) {
 	handler.config = fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s",

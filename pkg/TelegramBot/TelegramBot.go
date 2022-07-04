@@ -3,6 +3,7 @@ package telegrambot
 import (
 	"fmt"
 	tb "gopkg.in/telebot.v3"
+	"strings"
 	"time"
 )
 
@@ -27,4 +28,32 @@ func (handler *Handler) SetToken(token string) {
 
 func (handler *Handler) StartBot() {
 	handler.Bot.Start()
+}
+
+func (handler *Handler) OwnerVerify(id int64) bool {
+	if id != handler.Owner.IDAsInt() {
+		return false
+	}
+	return true
+}
+
+func (handler *Handler) SendText(text string) {
+	_, err := handler.Bot.Send(&handler.Owner, text)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func (handler *Handler) FileTypeVerify(fileName string, fileType string) bool {
+	if !strings.Contains(fileName, fileType) {
+		return false
+	}
+	return true
+}
+
+func (handler *Handler) DownloadFile(file *tb.File, path string, chosenName string) {
+	err := handler.Bot.Download(file, path+chosenName)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

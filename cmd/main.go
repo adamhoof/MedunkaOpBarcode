@@ -1,16 +1,13 @@
 package main
 
 import (
+	database "MedunkaOPBarcode/pkg/Database"
 	env "MedunkaOPBarcode/pkg/Env"
+	events "MedunkaOPBarcode/pkg/Events"
 	telegrambot "MedunkaOPBarcode/pkg/TelegramBot"
 	"os"
 	"sync"
 )
-
-const dropExistingTableSQL = `DROP TABLE IF EXISTS products;`
-const createTableSQL = `CREATE TABLE products(Barcode text, name text, stock text, price text, unitOfMeasure text, unitOfMeasureKoef decimal);`
-const importFromCSVToTableSQL = `COPY products FROM '/' DELIMITER ';' CSV HEADER;`
-const queryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE Barcode = $1;`
 
 /*var boldRed = color.Style{color.FgRed, color.OpBold}
 var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}*/
@@ -21,7 +18,9 @@ func main() {
 	skladBois := telegrambot.User{Id: "-1001671432440"}
 	botHandler := telegrambot.Handler{Owner: skladBois}
 	botHandler.SetToken(os.Getenv("botToken"))
-	botHandler.OnUploadFileAction()
+
+	events.FileUpload(&botHandler, &database.PostgresDBHandler{})
+
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {

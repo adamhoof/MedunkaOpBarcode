@@ -5,20 +5,28 @@ import (
 	telegrambot "MedunkaOPBarcode/pkg/TelegramBot"
 	"fmt"
 	tb "gopkg.in/telebot.v3"
-	"strings"
 )
 
 func FileUpload(handler *telegrambot.Handler, db database.Database) {
 	handler.Bot.Handle(tb.OnDocument, func(c tb.Context) (err error) {
 		if err != nil {
-			fmt.Println(err)
+			return fmt.Errorf("unable to handle endpoint")
 		}
-		if !strings.Contains(c.Message().Document.FileName, ".csv") {
-			_, err = handler.Bot.Send(&handler.Owner, "Check file type")
-			if err != nil {
-				fmt.Println(err)
-			}
+
+		if !handler.OwnerVerify(c.Message().Chat.ID) {
+			handler.SendText("unauthorised attempt to access bot: " + c.Message().Sender.Username)
+			return fmt.Errorf("bot owner not verified")
 		}
+
+		if !handler.FileTypeVerify(c.Message().Document.FileName, ".csv") {
+			handler.SendText("check file type")
+			return fmt.Errorf("file type not valid")
+		}
+		handler.DownloadFile(&c.Message().Document.File, "Products/", "update.csv")
+
+		db.ExecuteStatement(database.DropExistingTableSQL)
+		db.ExecuteStatement(database.CreateTableSQL)
+		db.ExecuteStatement(database.ImportFromCSVToTableSQL)
 		return nil
 	})
 }
