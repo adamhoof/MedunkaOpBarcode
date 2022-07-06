@@ -1,9 +1,9 @@
 package events
 
 import (
-	database "MedunkaOPBarcode/pkg/Database"
-	telegrambot "MedunkaOPBarcode/pkg/TelegramBot"
 	"fmt"
+	database "github.com/adamhoof/MedunkaOpBarcode/pkg/Database"
+	telegrambot "github.com/adamhoof/MedunkaOpBarcode/pkg/TelegramBot"
 	tb "gopkg.in/telebot.v3"
 )
 

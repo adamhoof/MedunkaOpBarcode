@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 )
 
 type PostgresDBHandler struct {
@@ -11,9 +12,9 @@ type PostgresDBHandler struct {
 }
 
 const DropExistingTableSQL = `DROP TABLE IF EXISTS products;`
-const CreateTableSQL = `CREATE TABLE products(Barcode text, name text, stock text, price text, unitOfMeasure text, unitOfMeasureKoef decimal);`
+const CreateTableSQL = `CREATE TABLE products(barcode text, name text, stock text, price text, unitOfMeasure text, unitOfMeasureKoef decimal);`
 const ImportFromCSVToTableSQL = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
-const QueryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE Barcode = $1;`
+const QueryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE barcode = $1;`
 
 func (handler *PostgresDBHandler) GrabConfig(config *DBConfig) {
 	handler.config = fmt.Sprintf("host=%s port=%d user=%s "+
@@ -25,14 +26,14 @@ func (handler *PostgresDBHandler) Connect() {
 	var err error
 	handler.db, err = sql.Open("postgres", handler.config)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 }
 
 func (handler *PostgresDBHandler) ExecuteStatement(statement string) {
 	_, err := handler.db.Exec(statement)
 	if err != nil {
-		return
+		fmt.Println(err)
 	}
 }
 

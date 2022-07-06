@@ -1,4 +1,4 @@
-module MedunkaOPBarcode
+module github.com/adamhoof/MedunkaOpBarcode
 
 go 1.18
 
