@@ -1,16 +1,23 @@
 package main
 
 import (
+	barcode "MedunkaOPBarcode/pkg/Barcode"
+	artist "MedunkaOPBarcode/pkg/CLIArtist"
 	database "MedunkaOPBarcode/pkg/Database"
 	env "MedunkaOPBarcode/pkg/Env"
 	events "MedunkaOPBarcode/pkg/Events"
+	serialcommunication "MedunkaOPBarcode/pkg/SerialCommunication"
 	telegrambot "MedunkaOPBarcode/pkg/TelegramBot"
+	typeconv "MedunkaOPBarcode/pkg/TypeConversion"
+	"github.com/tarm/serial"
+	"gopkg.in/gookit/color.v1"
 	"os"
+	"strings"
 	"sync"
 )
 
-/*var boldRed = color.Style{color.FgRed, color.OpBold}
-var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}*/
+var boldRed = color.Style{color.FgRed, color.OpBold}
+var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}
 
 func main() {
 	env.SetEnv()
@@ -26,8 +33,7 @@ func main() {
 	go func() {
 		botHandler.StartBot()
 	}()
-	wg.Wait()
-	/*dbPort := typeconv.StringToInt(os.Getenv("dbPort"))
+	dbPort := typeconv.StringToInt(os.Getenv("dbPort"))
 	dbConfig := database.DBConfig{
 		Host:     os.Getenv("host"),
 		Port:     dbPort,
@@ -38,9 +44,9 @@ func main() {
 	var postgresDBHandler database.PostgresDBHandler
 	postgresDBHandler.GrabConfig(&dbConfig)
 	postgresDBHandler.Connect()
-	postgresDBHandler.ExecuteStatement(dropExistingTableSQL)
-	postgresDBHandler.ExecuteStatement(createTableSQL)
-	postgresDBHandler.ExecuteStatement(importFromCSVToTableSQL)
+	postgresDBHandler.ExecuteStatement(database.DropExistingTableSQL)
+	postgresDBHandler.ExecuteStatement(database.CreateTableSQL)
+	postgresDBHandler.ExecuteStatement(database.ImportFromCSVToTableSQL)
 
 	serialPort := serialcommunication.OpenPort(&serial.Config{Name: "/dev/ttyAMA0", Baud: 9600})
 
@@ -53,7 +59,7 @@ func main() {
 
 		barcodeAsString := typeconv.ByteArrayToString(barcodeAsByteArray)
 
-		name, stock, price, unitOfMeasure, unitOfMeasureKoef := postgresDBHandler.QueryProductData(queryProductDataSQL, barcodeAsString)
+		name, stock, price, unitOfMeasure, unitOfMeasureKoef := postgresDBHandler.QueryProductData(database.QueryProductDataSQL, barcodeAsString)
 
 		strPriceWithoutSuffix := strings.ReplaceAll(price, ".00 Kč", "")
 		strPricePerMj := typeconv.FloatToString(typeconv.StringToFloat(strPriceWithoutSuffix) * unitOfMeasureKoef)
@@ -69,5 +75,5 @@ func main() {
 			strPricePerMj+"Kč")
 		artist.PrintStyledText(italicWhite, "\n") //TODO replace?
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
-	}*/
+	}
 }
