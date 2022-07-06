@@ -1,6 +1,7 @@
 package main
 
 import (
+	barcode "github.com/adamhoof/MedunkaOpBarcode/pkg/Barcode"
 	artist "github.com/adamhoof/MedunkaOpBarcode/pkg/CLIArtist"
 	database "github.com/adamhoof/MedunkaOpBarcode/pkg/Database"
 	env "github.com/adamhoof/MedunkaOpBarcode/pkg/Env"
@@ -8,7 +9,6 @@ import (
 	serialcommunication "github.com/adamhoof/MedunkaOpBarcode/pkg/SerialCommunication"
 	telegrambot "github.com/adamhoof/MedunkaOpBarcode/pkg/TelegramBot"
 	typeconv "github.com/adamhoof/MedunkaOpBarcode/pkg/TypeConversion"
-	barcode "github.com/adamhoof/MedunkaOpBarcode/pkg/barcode"
 	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
 	"os"
