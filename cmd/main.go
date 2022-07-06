@@ -1,14 +1,14 @@
 package main
 
 import (
-	barcode "MedunkaOPBarcode/pkg/Barcode"
-	artist "MedunkaOPBarcode/pkg/CLIArtist"
-	database "MedunkaOPBarcode/pkg/Database"
-	env "MedunkaOPBarcode/pkg/Env"
-	events "MedunkaOPBarcode/pkg/Events"
-	serialcommunication "MedunkaOPBarcode/pkg/SerialCommunication"
-	telegrambot "MedunkaOPBarcode/pkg/TelegramBot"
-	typeconv "MedunkaOPBarcode/pkg/TypeConversion"
+	artist "github.com/adamhoof/MedunkaOpBarcode/pkg/CLIArtist"
+	database "github.com/adamhoof/MedunkaOpBarcode/pkg/Database"
+	env "github.com/adamhoof/MedunkaOpBarcode/pkg/Env"
+	events "github.com/adamhoof/MedunkaOpBarcode/pkg/Events"
+	serialcommunication "github.com/adamhoof/MedunkaOpBarcode/pkg/SerialCommunication"
+	telegrambot "github.com/adamhoof/MedunkaOpBarcode/pkg/TelegramBot"
+	typeconv "github.com/adamhoof/MedunkaOpBarcode/pkg/TypeConversion"
+	barcode "github.com/adamhoof/MedunkaOpBarcode/pkg/barcode"
 	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
 	"os"
