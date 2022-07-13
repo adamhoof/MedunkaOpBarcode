@@ -1,19 +1,14 @@
 package main
 
 import (
-	barcode "MedunkaOpBarcode/pkg/Barcode"
-	artist "MedunkaOpBarcode/pkg/CLIArtist"
 	database "MedunkaOpBarcode/pkg/Database"
 	env "MedunkaOpBarcode/pkg/Env" //create your own Env directory with env variables
 	events "MedunkaOpBarcode/pkg/Events"
-	serialcommunication "MedunkaOpBarcode/pkg/SerialCommunication"
 	telegrambot "MedunkaOpBarcode/pkg/TelegramBot"
 	typeconv "MedunkaOpBarcode/pkg/TypeConversion"
 	"fmt"
-	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
 	"os"
-	"strings"
 	"sync"
 )
 
@@ -28,7 +23,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	skladBois := telegrambot.User{Id: "-1001671432440"}
+	skladBois := telegrambot.User{Id: os.Getenv("botOwner")}
 	botHandler := telegrambot.Handler{Owner: skladBois} //set owner for bot
 	botHandler.SetToken(os.Getenv("botToken"))
 
@@ -51,14 +46,13 @@ func main() {
 
 	events.ReceiveFile(&botHandler, &postgresDBHandler)
 
-	serialPort := serialcommunication.OpenPort(&serial.Config{Name: "/dev/ttyAMA0", Baud: 9600})
+	/*serialPort := serialcommunication.OpenPort(&serial.Config{Name: "/dev/ttyAMA0", Baud: 9600})
 
 	var barcodeReaderHandler barcode.ReaderHandler
 	barcodeReaderHandler.GetPort(serialPort)
 
 	for {
-		/*wait till reader gets the barcode number value and inserts some delimiter at the end, in my case ENTER
-		read more here: https://stackoverflow.com/questions/45121787/how-to-read-data-from-serial-and-process-it-when-a-specific-delimiter-is-found */
+
 		barcodeAsByteArray := barcodeReaderHandler.ReadUntilDelimiter('\x0d')
 		artist.ClearTerminal()
 
@@ -85,5 +79,5 @@ func main() {
 			strPricePerMj+"Kč")
 		artist.PrintStyledText(italicWhite, "\n") //TODO replace?
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
-	}
+	}*/
 }

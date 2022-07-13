@@ -34,4 +34,9 @@ func SetEnv() {
 	if err != nil {
 		fmt.Println("unable to set env for: ", err)
 	}
+	err = os.Setenv("botOwner", "-1001671432440")
+	if err != nil {
+		fmt.Println("unable to set env for: ", err)
+	}
+
 }
