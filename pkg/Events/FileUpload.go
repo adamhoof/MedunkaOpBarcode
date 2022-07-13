@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func FileUpload(handler *telegrambot.Handler, db database.Database) {
+func ReceiveFile(handler *telegrambot.Handler, db database.Database) {
 	handler.Bot.Handle(tb.OnDocument, func(c tb.Context) (err error) {
 		if err != nil {
 			return fmt.Errorf("unable to handle endpoint", err)
@@ -26,7 +26,7 @@ func FileUpload(handler *telegrambot.Handler, db database.Database) {
 		fmt.Println("Downloading file...")
 		handler.DownloadFile(&c.Message().Document.File, "/tmp/Products/", "update.csv")
 		fmt.Println("Done!")
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 
 		fmt.Println("Generating database table...")
 		db.ExecuteStatement(database.DropExistingTableSQL)

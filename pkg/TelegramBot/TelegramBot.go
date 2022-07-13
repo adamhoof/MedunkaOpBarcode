@@ -1,6 +1,7 @@
 package telegrambot
 
 import (
+	typeconv "MedunkaOpBarcode/pkg/TypeConversion"
 	"fmt"
 	tb "gopkg.in/telebot.v3"
 	"strings"
@@ -31,7 +32,7 @@ func (handler *Handler) StartBot() {
 }
 
 func (handler *Handler) OwnerVerify(id int64) bool {
-	if id != handler.Owner.IDAsInt() {
+	if id != typeconv.StringToInt64(handler.Owner.Id) {
 		return false
 	}
 	return true

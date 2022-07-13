@@ -13,6 +13,14 @@ func StringToInt(str string) int {
 	return integer
 }
 
+func StringToInt64(str string) int64 {
+	integer, err := strconv.Atoi(str)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return int64(integer)
+}
+
 func ByteArrayToString(arrayOfBytes []byte) string {
 	str, err := strconv.ParseInt(string(arrayOfBytes), 10, 64)
 	if err != nil {
