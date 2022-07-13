@@ -14,10 +14,10 @@ func ReceiveFile(handler *telegrambot.Handler, db database.Database) {
 			return fmt.Errorf("unable to handle endpoint", err)
 		}
 
-		/*if !handler.OwnerVerify(c.Message().Chat.ID) {
+		if !handler.OwnerVerify(c.Message().Chat.ID) {
 			handler.SendText("unauthorised attempt to access bot: " + c.Message().Sender.Username)
 			return fmt.Errorf("bot owner not verified")
-		}*/
+		}
 
 		if !handler.FileTypeVerify(c.Message().Document.FileName, ".csv") {
 			handler.SendText("check file type")
@@ -26,7 +26,7 @@ func ReceiveFile(handler *telegrambot.Handler, db database.Database) {
 		fmt.Println("Downloading file...")
 		handler.DownloadFile(&c.Message().Document.File, "/tmp/Products/", "update.csv")
 		fmt.Println("Done!")
-		time.Sleep(1 * time.Second)
+		time.Sleep(2 * time.Second)
 
 		fmt.Println("Generating database table...")
 		db.ExecuteStatement(database.DropExistingTableSQL)
