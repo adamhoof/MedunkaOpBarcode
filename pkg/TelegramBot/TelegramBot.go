@@ -54,6 +54,6 @@ func (handler *Handler) FileTypeVerify(fileName string, fileType string) bool {
 func (handler *Handler) DownloadFile(file *tb.File, path string, chosenName string) {
 	err := handler.Bot.Download(file, path+chosenName)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("download file:", err)
 	}
 }

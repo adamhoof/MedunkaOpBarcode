@@ -13,7 +13,7 @@ type PostgresDBHandler struct {
 
 const DropExistingTableSQL = `DROP TABLE IF EXISTS products;`
 const CreateTableSQL = `CREATE TABLE products(barcode text, name text, stock text, price text, unitOfMeasure text, unitOfMeasureKoef decimal);`
-const ImportFromCSVToTableSQL = `COPY products FROM '/home/pi/MedunkaOpBarcode/products.csv' DELIMITER ';' CSV HEADER;`
+const ImportFromCSVToTableSQL = `COPY products FROM '/tmp/Products/update.csv' DELIMITER ';' CSV HEADER;`
 const QueryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE barcode = $1;`
 
 func (handler *PostgresDBHandler) GrabConfig(config *DBConfig) {

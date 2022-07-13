@@ -1,3 +1,2 @@
 .idea
-Products/*
-pkg/Env
+internal/Env

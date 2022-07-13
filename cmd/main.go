@@ -1,14 +1,15 @@
 package main
 
 import (
-	barcode "github.com/adamhoof/MedunkaOpBarcode/pkg/Barcode"
-	artist "github.com/adamhoof/MedunkaOpBarcode/pkg/CLIArtist"
-	database "github.com/adamhoof/MedunkaOpBarcode/pkg/Database"
-	env "github.com/adamhoof/MedunkaOpBarcode/pkg/Env"
-	events "github.com/adamhoof/MedunkaOpBarcode/pkg/Events"
-	serialcommunication "github.com/adamhoof/MedunkaOpBarcode/pkg/SerialCommunication"
-	telegrambot "github.com/adamhoof/MedunkaOpBarcode/pkg/TelegramBot"
-	typeconv "github.com/adamhoof/MedunkaOpBarcode/pkg/TypeConversion"
+	barcode "MedunkaOpBarcode/pkg/Barcode"
+	artist "MedunkaOpBarcode/pkg/CLIArtist"
+	database "MedunkaOpBarcode/pkg/Database"
+	env "MedunkaOpBarcode/pkg/Env"
+	events "MedunkaOpBarcode/pkg/Events"
+	serialcommunication "MedunkaOpBarcode/pkg/SerialCommunication"
+	telegrambot "MedunkaOpBarcode/pkg/TelegramBot"
+	typeconv "MedunkaOpBarcode/pkg/TypeConversion"
+	"fmt"
 	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
 	"os"
@@ -22,11 +23,14 @@ var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}
 func main() {
 	env.SetEnv()
 
+	err := os.MkdirAll("/tmp/Products", os.ModePerm)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	skladBois := telegrambot.User{Id: "-1001671432440"}
 	botHandler := telegrambot.Handler{Owner: skladBois}
 	botHandler.SetToken(os.Getenv("botToken"))
-
-	events.FileUpload(&botHandler, &database.PostgresDBHandler{})
 
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -44,9 +48,8 @@ func main() {
 	var postgresDBHandler database.PostgresDBHandler
 	postgresDBHandler.GrabConfig(&dbConfig)
 	postgresDBHandler.Connect()
-	postgresDBHandler.ExecuteStatement(database.DropExistingTableSQL)
-	postgresDBHandler.ExecuteStatement(database.CreateTableSQL)
-	postgresDBHandler.ExecuteStatement(database.ImportFromCSVToTableSQL)
+
+	events.FileUpload(&botHandler, &postgresDBHandler)
 
 	serialPort := serialcommunication.OpenPort(&serial.Config{Name: "/dev/ttyAMA0", Baud: 9600})
 
@@ -57,7 +60,7 @@ func main() {
 		barcodeAsByteArray := barcodeReaderHandler.ReadUntilDelimiter('\x0d')
 		artist.ClearTerminal()
 
-		barcodeAsString := typeconv.ByteArrayToString(barcodeAsByteArray)
+		barcodeAsString := typeconv.ByteArrayToString(barcodeAsByteArray[:len(barcodeAsByteArray)-1])
 
 		name, stock, price, unitOfMeasure, unitOfMeasureKoef := postgresDBHandler.QueryProductData(database.QueryProductDataSQL, barcodeAsString)
 
