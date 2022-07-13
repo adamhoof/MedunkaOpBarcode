@@ -1,14 +1,19 @@
 package main
 
 import (
+	barcode "MedunkaOpBarcode/pkg/Barcode"
+	artist "MedunkaOpBarcode/pkg/CLIArtist"
 	database "MedunkaOpBarcode/pkg/Database"
 	env "MedunkaOpBarcode/pkg/Env" //create your own Env directory with env variables
 	events "MedunkaOpBarcode/pkg/Events"
+	serialcommunication "MedunkaOpBarcode/pkg/SerialCommunication"
 	telegrambot "MedunkaOpBarcode/pkg/TelegramBot"
 	typeconv "MedunkaOpBarcode/pkg/TypeConversion"
 	"fmt"
+	"github.com/tarm/serial"
 	"gopkg.in/gookit/color.v1"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -46,7 +51,7 @@ func main() {
 
 	events.ReceiveFile(&botHandler, &postgresDBHandler)
 
-	/*serialPort := serialcommunication.OpenPort(&serial.Config{Name: "/dev/ttyAMA0", Baud: 9600})
+	serialPort := serialcommunication.OpenPort(&serial.Config{Name: "/dev/ttyAMA0", Baud: 9600})
 
 	var barcodeReaderHandler barcode.ReaderHandler
 	barcodeReaderHandler.GetPort(serialPort)
@@ -79,5 +84,5 @@ func main() {
 			strPricePerMj+"Kč")
 		artist.PrintStyledText(italicWhite, "\n") //TODO replace?
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
-	}*/
+	}
 }
