@@ -14,7 +14,7 @@ func StringToInt(str string) int {
 }
 
 func StringToInt64(str string) int64 {
-	integer, err := strconv.Atoi(str)
+	integer, err := strconv.ParseInt(str, 10, 64)
 	if err != nil {
 		fmt.Println(err)
 	}
