@@ -18,7 +18,7 @@ func StringToInt64(str string) int64 {
 	if err != nil {
 		fmt.Println(err)
 	}
-	return int64(integer)
+	return integer
 }
 
 func ByteArrayToString(arrayOfBytes []byte) string {
