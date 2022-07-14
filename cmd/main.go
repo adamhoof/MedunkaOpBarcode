@@ -82,7 +82,7 @@ func main() {
 		}
 		artist.PrintStyledText(italicWhite, "Přepočet na ("+unitOfMeasure+"): "+
 			strPricePerMj+"Kč")
-		artist.PrintSpaces(1) //TODO replace?
+		artist.PrintSpaces(1)
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
 	}
 }
