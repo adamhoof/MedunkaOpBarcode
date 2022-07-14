@@ -71,17 +71,14 @@ func main() {
 
 		artist.PrintStyledText(italicWhite, name)
 		artist.PrintSpaces(2)
-		artist.PrintStyledText(boldRed,
-			"Cena za ks: "+
-				strPriceWithoutSuffix+"Kč")
+		artist.PrintStyledText(boldRed, fmt.Sprintf("Cena za ks: %s Kč", strPriceWithoutSuffix))
 		artist.PrintSpaces(2)
 
 		if unitOfMeasure == "" {
 			artist.PrintStyledText(italicWhite, "Stock: "+stock)
 			continue
 		}
-		artist.PrintStyledText(italicWhite, "Přepočet na ("+unitOfMeasure+"): "+
-			strPricePerMj+"Kč")
+		artist.PrintStyledText(italicWhite, fmt.Sprintf("Přepočet na %s: %s Kč", unitOfMeasure, strPricePerMj))
 		artist.PrintSpaces(1)
 		artist.PrintStyledText(italicWhite, "Stock: "+stock)
 	}
