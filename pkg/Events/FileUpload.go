@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ReceiveFile(handler *telegrambot.Handler, db database.Database) {
+func ReceiveFile(handler *telegrambot.Handler, db database.Database, pathToStoreFile string, nameYourFile string) {
 	handler.Bot.Handle(tb.OnDocument, func(c tb.Context) (err error) {
 		if err != nil {
 			return fmt.Errorf("unable to handle endpoint", err)
@@ -24,7 +24,7 @@ func ReceiveFile(handler *telegrambot.Handler, db database.Database) {
 			return fmt.Errorf("file type not valid")
 		}
 		fmt.Println("Downloading file...")
-		handler.DownloadFile(&c.Message().Document.File, "/tmp/Products/", "update.csv")
+		handler.DownloadFile(&c.Message().Document.File, pathToStoreFile, nameYourFile)
 		fmt.Println("Done!")
 		time.Sleep(2 * time.Second)
 
