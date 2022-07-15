@@ -7,8 +7,7 @@ import (
 )
 
 type PostgresDBHandler struct {
-	db     *sql.DB
-	config string
+	db *sql.DB
 }
 
 const DropExistingTableSQL = `DROP TABLE IF EXISTS products;`
@@ -16,15 +15,9 @@ const CreateTableSQL = `CREATE TABLE products(barcode text, name text, stock tex
 const ImportFromCSVToTableSQL = `COPY products FROM '/tmp/Products/update.csv' DELIMITER ';' CSV HEADER;`
 const QueryProductDataSQL = `SELECT name, stock, price, unitOfMeasure, unitOfMeasureKoef FROM products WHERE barcode = $1;`
 
-func (handler *PostgresDBHandler) GrabConfig(config *DBConfig) {
-	handler.config = fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s",
-		config.Host, config.Port, config.User, config.Password, config.DBName)
-}
-
-func (handler *PostgresDBHandler) Connect() {
+func (handler *PostgresDBHandler) Connect(config *string) {
 	var err error
-	handler.db, err = sql.Open("postgres", handler.config)
+	handler.db, err = sql.Open("postgres", *config)
 	if err != nil {
 		fmt.Println(err)
 	}

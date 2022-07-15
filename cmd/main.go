@@ -38,17 +38,15 @@ func main() {
 		botHandler.StartBot()
 	}()
 
-	dbPort := typeconv.StringToInt(os.Getenv("dbPort"))
-	dbConfig := database.DBConfig{
-		Host:     os.Getenv("host"),
-		Port:     dbPort,
-		User:     os.Getenv("user"),
-		Password: os.Getenv("password"),
-		DBName:   os.Getenv("dbname"),
-	}
+	config := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s",
+		os.Getenv("host"),
+		typeconv.StringToInt(os.Getenv("dbPort")),
+		os.Getenv("user"),
+		os.Getenv("password"),
+		os.Getenv("dbname"))
+
 	var postgresDBHandler database.PostgresDBHandler
-	postgresDBHandler.GrabConfig(&dbConfig)
-	postgresDBHandler.Connect()
+	postgresDBHandler.Connect(&config)
 
 	events.ReceiveFile(&botHandler, &postgresDBHandler, "/tmp/Products", "update.csv")
 
