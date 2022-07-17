@@ -32,7 +32,7 @@ func ReceiveFile(handler *telegrambot.Handler, db database.Database, conf *essen
 		fmt.Println("Generating database table...")
 		db.ExecuteStatement(database.GenerateDropExistingTableIfExistsSQL(conf.DatabaseTableName))
 		db.ExecuteStatement(database.GenerateCreateTableSQL(conf.DatabaseTableName))
-		db.ExecuteStatement(database.GenerateImportFromCSVToTableSQL(conf.DatabaseTableName, conf.PathToCSVUpdateFile, conf.CsvDelimiter))
+		db.ExecuteStatement(database.GenerateImportFromCSVToTableSQL(conf.DatabaseTableName, conf.PathToCSVUpdateFile, conf.CsvUpdateFileName, conf.CsvDelimiter))
 		fmt.Println("Done!")
 		return nil
 	})

@@ -25,7 +25,7 @@ func main() {
 	env.SetEnv()
 
 	conf := essential.Config{ //configure your own values based on your hardware, privileges, settings etc., those values are going to be used throughout the program
-		PathToCSVUpdateFile:                "/tmp/Products",
+		PathToCSVUpdateFile:                "/tmp/Products/", //include trailing slash
 		CsvUpdateFileName:                  "update.csv",
 		CsvDelimiter:                       ";",
 		DatabaseTableName:                  "products",
