@@ -6,20 +6,15 @@ import (
 	database "MedunkaOpBarcode/pkg/Database"
 	env "MedunkaOpBarcode/pkg/Env" //you do not have to use your own Env file if you don't publish it anywhere, enter the credentials into the EssentialConfig
 	essential "MedunkaOpBarcode/pkg/EssentialConfig"
-	events "MedunkaOpBarcode/pkg/Events"
 	serialcommunication "MedunkaOpBarcode/pkg/SerialCommunication"
 	telegrambot "MedunkaOpBarcode/pkg/TelegramBot"
 	typeconv "MedunkaOpBarcode/pkg/TypeConversion"
 	"fmt"
 	"github.com/tarm/serial"
-	"gopkg.in/gookit/color.v1"
 	"os"
 	"strings"
 	"sync"
 )
-
-var boldRed = color.Style{color.FgRed, color.OpBold}
-var italicWhite = color.Style{color.FgLightWhite, color.OpItalic}
 
 func main() {
 	env.SetEnv()
@@ -66,7 +61,7 @@ func main() {
 	var postgresDBHandler database.PostgresDBHandler
 	postgresDBHandler.Connect(&dbConnectionConfig)
 
-	events.ReceiveFile(&botHandler, &postgresDBHandler, &conf)
+	telegrambot.OnFileUpload(&botHandler, &postgresDBHandler, &conf)
 
 	serialPort := serialcommunication.OpenPort(&serial.Config{Name: conf.SerialPortName, Baud: conf.SerialPortBaudRate})
 
@@ -84,17 +79,17 @@ func main() {
 		strPriceWithoutSuffix := strings.ReplaceAll(price, ".00 Kč", "")
 		strPricePerMj := typeconv.FloatToString(typeconv.StringToFloat(strPriceWithoutSuffix) * unitOfMeasureKoef)
 
-		artist.PrintStyledText(italicWhite, name)
+		artist.PrintStyledText(artist.ItalicWhite, name)
 		artist.PrintSpaces(2)
-		artist.PrintStyledText(boldRed, fmt.Sprintf("Cena za ks: %s Kč", strPriceWithoutSuffix))
+		artist.PrintStyledText(artist.BoldRed, fmt.Sprintf("Cena za ks: %s Kč", strPriceWithoutSuffix))
 		artist.PrintSpaces(2)
 
 		if unitOfMeasure == "" {
-			artist.PrintStyledText(italicWhite, "Stock: "+stock)
+			artist.PrintStyledText(artist.ItalicWhite, "Stock: "+stock)
 			continue
 		}
-		artist.PrintStyledText(italicWhite, fmt.Sprintf("Přepočet na %s: %s Kč", unitOfMeasure, strPricePerMj))
+		artist.PrintStyledText(artist.ItalicWhite, fmt.Sprintf("Přepočet na %s: %s Kč", unitOfMeasure, strPricePerMj))
 		artist.PrintSpaces(1)
-		artist.PrintStyledText(italicWhite, "Stock: "+stock)
+		artist.PrintStyledText(artist.ItalicWhite, "Stock: "+stock)
 	}
 }

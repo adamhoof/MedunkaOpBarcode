@@ -5,6 +5,9 @@ import (
 	"gopkg.in/gookit/color.v1"
 )
 
+var BoldRed = color.Style{color.FgRed, color.OpBold}
+var ItalicWhite = color.Style{color.FgLightWhite, color.OpItalic}
+
 func PrintStyledText(style color.Style, text string) {
 	style.Println(text)
 }
