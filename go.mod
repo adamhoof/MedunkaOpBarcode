@@ -3,6 +3,7 @@ module MedunkaOpBarcode
 go 1.18
 
 require (
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/lib/pq v1.10.6
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	gopkg.in/gookit/color.v1 v1.1.6
