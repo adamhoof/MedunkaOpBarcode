@@ -45,15 +45,18 @@ func (handler *Handler) SendText(text string) {
 	}
 }
 
-func (handler *Handler) FileTypeVerify(fileName string, fileType string) bool {
-	if !strings.Contains(fileName, fileType) {
-		return false
+func (handler *Handler) FileTypeVerify(fileName string, validFileTypes []string) (string, bool) {
+	for _, value := range validFileTypes {
+		if strings.Contains(fileName, value) {
+			return value, true
+		}
+		continue
 	}
-	return true
+	return "", false
 }
 
-func (handler *Handler) DownloadFile(file *tb.File, path string, chosenName string) {
-	err := handler.Bot.Download(file, path+chosenName)
+func (handler *Handler) DownloadFile(file *tb.File, path string, name string) {
+	err := handler.Bot.Download(file, path+name)
 	if err != nil {
 		fmt.Println("download file:", err)
 	}
