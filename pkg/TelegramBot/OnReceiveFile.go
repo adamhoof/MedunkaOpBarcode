@@ -1,16 +1,15 @@
-package events
+package telegrambot
 
 import (
 	database "MedunkaOpBarcode/pkg/Database"
 	essential "MedunkaOpBarcode/pkg/EssentialConfig"
-	telegrambot "MedunkaOpBarcode/pkg/TelegramBot"
 	"fmt"
 	tb "gopkg.in/telebot.v3"
 	"os/exec"
 	"time"
 )
 
-func ReceiveFile(handler *telegrambot.Handler, db database.Database, conf *essential.Config) {
+func (handler *Handler) OnReceiveFile(db database.Database, conf *essential.Config) (err error) {
 	handler.Bot.Handle(tb.OnDocument, func(c tb.Context) (err error) {
 		if err != nil {
 			return fmt.Errorf("unable to handle endpoint %s", err)
@@ -28,7 +27,10 @@ func ReceiveFile(handler *telegrambot.Handler, db database.Database, conf *essen
 		}
 
 		fmt.Println("Downloading file...")
-		handler.DownloadFile(&c.Message().Document.File, conf.PathToCSVUpdateFile, c.Message().Document.FileName)
+		err = handler.DownloadFile(&c.Message().Document.File, conf.PathToCSVUpdateFile, c.Message().Document.FileName)
+		if err != nil {
+			return err
+		}
 		fmt.Println("Done!")
 		time.Sleep(100 * time.Millisecond)
 
@@ -38,15 +40,25 @@ func ReceiveFile(handler *telegrambot.Handler, db database.Database, conf *essen
 		case ".xls":
 			exec.Command("xlsx2csv", "/tmp/Products/"+c.Message().Document.FileName+".xls", "-d", ";", "/tmp/Products/"+conf.CsvUpdateFileName)
 		default:
-			fmt.Println("This should never execute, or file type verification is incorrect")
+			fmt.Println("This should never execute, or file type verification is broken")
 		}
 		fmt.Println("File type: ", fileType)
 
 		fmt.Println("Generating database table...")
-		db.ExecuteStatement(database.GenerateDropExistingTableIfExistsSQL(conf.DatabaseTableName))
-		db.ExecuteStatement(database.GenerateCreateTableSQL(conf.DatabaseTableName))
-		db.ExecuteStatement(database.GenerateImportFromCSVToTableSQL(conf.DatabaseTableName, conf.PathToCSVUpdateFile, conf.CsvUpdateFileName, conf.CsvDelimiter))
+		err = db.ExecuteStatement(database.GenerateDropExistingTableIfExistsSQL(conf.DatabaseTableName))
+		if err != nil {
+			return err
+		}
+		err = db.ExecuteStatement(database.GenerateCreateTableSQL(conf.DatabaseTableName))
+		if err != nil {
+			return err
+		}
+		err = db.ExecuteStatement(database.GenerateImportFromCSVToTableSQL(conf.DatabaseTableName, conf.PathToCSVUpdateFile, conf.CsvUpdateFileName, conf.CsvDelimiter))
+		if err != nil {
+			return err
+		}
 		fmt.Println("Done!")
-		return nil
+		return err
 	})
+	return err
 }

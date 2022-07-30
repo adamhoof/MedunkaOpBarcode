@@ -10,19 +10,20 @@ type PostgresDBHandler struct {
 	db *sql.DB
 }
 
-func (handler *PostgresDBHandler) Connect(config *string) {
-	var err error
+func (handler *PostgresDBHandler) Connect(config *string) (err error) {
 	handler.db, err = sql.Open("postgres", *config)
 	if err != nil {
-		fmt.Println(err)
+		return fmt.Errorf("could not open connection %s", err)
 	}
+	return handler.db.Ping()
 }
 
-func (handler *PostgresDBHandler) ExecuteStatement(statement string) {
-	_, err := handler.db.Exec(statement)
+func (handler *PostgresDBHandler) ExecuteStatement(statement string) (err error) {
+	_, err = handler.db.Exec(statement)
 	if err != nil {
-		fmt.Println(err)
+		return fmt.Errorf("failed to execute db statement %s", err)
 	}
+	return err
 }
 
 func (handler *PostgresDBHandler) QueryProductData(query string, barcode string) (name string, stock string, price string, mj string, mjKoef float64) {

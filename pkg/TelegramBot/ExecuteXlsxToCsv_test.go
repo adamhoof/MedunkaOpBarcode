@@ -1,4 +1,4 @@
-package events
+package telegrambot
 
 import (
 	"os/exec"

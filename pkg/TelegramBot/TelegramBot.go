@@ -55,9 +55,10 @@ func (handler *Handler) FileTypeVerify(fileName string, validFileTypes []string)
 	return "", false
 }
 
-func (handler *Handler) DownloadFile(file *tb.File, path string, name string) {
-	err := handler.Bot.Download(file, path+name)
+func (handler *Handler) DownloadFile(file *tb.File, path string, name string) (err error) {
+	err = handler.Bot.Download(file, path+name)
 	if err != nil {
-		fmt.Println("download file:", err)
+		return fmt.Errorf("failed to download file: %s", err)
 	}
+	return nil
 }

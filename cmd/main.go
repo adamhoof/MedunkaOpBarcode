@@ -5,15 +5,15 @@ import (
 	artist "MedunkaOpBarcode/pkg/CLIArtist"
 	database "MedunkaOpBarcode/pkg/Database"
 	env "MedunkaOpBarcode/pkg/Env" //you do not have to use your own Env file if you don't publish it anywhere, enter the credentials into the EssentialConfig
+
 	essential "MedunkaOpBarcode/pkg/EssentialConfig"
-	events "MedunkaOpBarcode/pkg/Events"
+	prerunchecker "MedunkaOpBarcode/pkg/PreRunChecker"
 	serialcommunication "MedunkaOpBarcode/pkg/SerialCommunication"
 	telegrambot "MedunkaOpBarcode/pkg/TelegramBot"
 	typeconv "MedunkaOpBarcode/pkg/TypeConversion"
 	"fmt"
 	"github.com/tarm/serial"
 	"os"
-	"os/exec"
 	"strings"
 	"sync"
 )
@@ -38,18 +38,15 @@ func main() {
 		TelegramBotOwner:                   os.Getenv("botOwner"),
 	}
 
-	err := os.MkdirAll(conf.PathToCSVUpdateFile, os.ModePerm) //make dir to store product updates
+	err := prerunchecker.CreateUpdateDirIfNotExists(conf.PathToCSVUpdateFile, os.ModePerm)
 	if err != nil {
 		fmt.Println(err)
-	}
-
-	out, err := exec.Command("which", "xlsx2csv").Output()
-	if err != nil {
-		fmt.Println("failed to execute command ", err)
 		return
 	}
-	if len(out) == 0 {
-		fmt.Println("Missing xlsx2csv tool, install with:\nsudo apt install xlsx2csv")
+
+	err = prerunchecker.RequestXlsx2CsvInstallationIfNotExists()
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
@@ -71,11 +68,23 @@ func main() {
 		conf.DbName)
 
 	var postgresDBHandler database.PostgresDBHandler
-	postgresDBHandler.Connect(&dbConnectionConfig)
+	err = postgresDBHandler.Connect(&dbConnectionConfig)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	events.ReceiveFile(&botHandler, &postgresDBHandler, &conf)
+	err = botHandler.OnReceiveFile(&postgresDBHandler, &conf)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	serialPort := serialcommunication.OpenPort(&serial.Config{Name: conf.SerialPortName, Baud: conf.SerialPortBaudRate})
+	serialPort, serialErr := serialcommunication.OpenPort(&serial.Config{Name: conf.SerialPortName, Baud: conf.SerialPortBaudRate})
+	if serialErr != nil {
+		fmt.Println(serialErr)
+		return
+	}
 
 	var barcodeReaderHandler barcode.ReaderHandler
 	barcodeReaderHandler.GetPort(serialPort)

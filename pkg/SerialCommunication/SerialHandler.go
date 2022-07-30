@@ -2,10 +2,7 @@ package serialcommunication
 
 import "github.com/tarm/serial"
 
-func OpenPort(config *serial.Config) *serial.Port {
+func OpenPort(config *serial.Config) (*serial.Port, error) {
 	port, err := serial.OpenPort(config)
-	if err != nil {
-		panic(err)
-	}
-	return port
+	return port, err
 }
