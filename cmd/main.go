@@ -5,16 +5,16 @@ import (
 	artist "MedunkaOpBarcode/pkg/CLIArtist"
 	database "MedunkaOpBarcode/pkg/Database"
 	env "MedunkaOpBarcode/pkg/Env" //you do not have to use your own Env file if you don't publish it anywhere, enter the credentials into the EssentialConfig
+	serialcommunication "MedunkaOpBarcode/pkg/SerialCommunication"
+	"github.com/tarm/serial"
+	"strings"
 
 	essential "MedunkaOpBarcode/pkg/EssentialConfig"
 	prerunchecker "MedunkaOpBarcode/pkg/PreRunChecker"
-	serialcommunication "MedunkaOpBarcode/pkg/SerialCommunication"
 	telegrambot "MedunkaOpBarcode/pkg/TelegramBot"
 	typeconv "MedunkaOpBarcode/pkg/TypeConversion"
 	"fmt"
-	"github.com/tarm/serial"
 	"os"
-	"strings"
 	"sync"
 )
 
