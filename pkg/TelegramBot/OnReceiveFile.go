@@ -7,7 +7,6 @@ import (
 	tb "gopkg.in/telebot.v3"
 	"os"
 	"os/exec"
-	"time"
 )
 
 func (handler *Handler) OnReceiveFile(db database.Database, conf *essential.Config) (err error) {
@@ -39,33 +38,29 @@ func (handler *Handler) OnReceiveFile(db database.Database, conf *essential.Conf
 		fmt.Println("Downloading file...")
 		err = handler.DownloadFile(&c.Message().Document.File, conf.PathToCSVUpdateFile, c.Message().Document.FileName)
 		if err != nil {
-			return err
+			fmt.Println(err)
 		}
 		fmt.Println("Done!")
-		time.Sleep(2 * time.Second)
 
-		switch fileType {
-		case ".xlsx":
-			exec.Command("xlsx2csv", "/tmp/Products/"+c.Message().Document.FileName+".xlsx", "-d", ";", "/tmp/Products/"+conf.CsvUpdateFileName)
-		case ".xls":
-			exec.Command("xlsx2csv", "/tmp/Products/"+c.Message().Document.FileName+".xls", "-d", ";", "/tmp/Products/"+conf.CsvUpdateFileName)
-		default:
-			fmt.Println("This should never execute, or file type verification is broken")
+		if fileType == ".xlsx" || fileType == ".xls" {
+			output, conversionErr := exec.Command("xlsx2csv", conf.PathToCSVUpdateFile+c.Message().Document.FileName, conf.PathToCSVUpdateFile+conf.CsvUpdateFileName, "-d", conf.CsvDelimiter).Output()
+			if conversionErr != nil {
+				fmt.Println(output)
+			}
 		}
-		fmt.Println("File type: ", fileType)
 
 		fmt.Println("Generating database table...")
 		err = db.ExecuteStatement(database.GenerateDropExistingTableIfExistsSQL(conf.DatabaseTableName))
 		if err != nil {
-			return err
+			fmt.Println("could not drop table", err)
 		}
 		err = db.ExecuteStatement(database.GenerateCreateTableSQL(conf.DatabaseTableName))
 		if err != nil {
-			return err
+			fmt.Println("could not generate table", err)
 		}
 		err = db.ExecuteStatement(database.GenerateImportFromCSVToTableSQL(conf.DatabaseTableName, conf.PathToCSVUpdateFile, conf.CsvUpdateFileName, conf.CsvDelimiter))
 		if err != nil {
-			return err
+			fmt.Println("could not import from csv", err)
 		}
 		fmt.Println("Done!")
 		return err
