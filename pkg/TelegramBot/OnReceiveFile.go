@@ -5,6 +5,7 @@ import (
 	essential "MedunkaOpBarcode/pkg/EssentialConfig"
 	"fmt"
 	tb "gopkg.in/telebot.v3"
+	"os"
 	"os/exec"
 	"time"
 )
@@ -24,6 +25,15 @@ func (handler *Handler) OnReceiveFile(db database.Database, conf *essential.Conf
 		if !isValid {
 			handler.SendText("check file type")
 			return fmt.Errorf("file type not valid")
+		}
+
+		err = os.RemoveAll(conf.PathToCSVUpdateFile)
+		if err != nil {
+			return err
+		}
+		err = os.MkdirAll(conf.PathToCSVUpdateFile, os.ModePerm)
+		if err != nil {
+			return err
 		}
 
 		fmt.Println("Downloading file...")
