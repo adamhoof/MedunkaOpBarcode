@@ -32,7 +32,7 @@ func (handler *Handler) OnReceiveFile(db database.Database, conf *essential.Conf
 			return err
 		}
 		fmt.Println("Done!")
-		time.Sleep(1000 * time.Millisecond)
+		time.Sleep(2 * time.Second)
 
 		switch fileType {
 		case ".xlsx":
