@@ -11,7 +11,7 @@ func GenerateCreateTableSQL(tableName string) (statement string) {
 }
 
 func GenerateImportFromCSVToTableSQL(tableName string, pathToCSVUpdate string, csvUpdateFileName string, delimiter string) (statement string) {
-	return fmt.Sprintf("COPY %s FROM '%s/%s' DELIMITER '%s' CSV HEADER;", tableName, pathToCSVUpdate, csvUpdateFileName, delimiter)
+	return fmt.Sprintf("COPY %s FROM '%s%s' DELIMITER '%s' CSV HEADER;", tableName, pathToCSVUpdate, csvUpdateFileName, delimiter)
 }
 
 func GenerateQueryProductDataSQL(tableName string) (statement string) {

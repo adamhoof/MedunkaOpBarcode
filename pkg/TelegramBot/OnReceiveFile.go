@@ -27,11 +27,11 @@ func (handler *Handler) OnReceiveFile(db database.Database, conf *essential.Conf
 			return fmt.Errorf("file type not valid")
 		}
 
-		err = os.RemoveAll("/tmp/Products")
+		err = os.RemoveAll(conf.PathToCSVUpdateFile)
 		if err != nil {
 			return err
 		}
-		err = os.MkdirAll("/tmp/Products", os.ModePerm)
+		err = os.MkdirAll(conf.PathToCSVUpdateFile, os.ModePerm)
 		if err != nil {
 			return err
 		}
