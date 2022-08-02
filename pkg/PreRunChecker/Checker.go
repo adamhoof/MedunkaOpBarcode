@@ -8,7 +8,7 @@ import (
 )
 
 func CreateUpdateDirIfNotExists(dirToCreate string, mode fs.FileMode) (err error) {
-	return os.MkdirAll(dirToCreate, mode) //make dir to store product updates
+	return os.MkdirAll(dirToCreate, mode)
 }
 
 func RequestXlsx2CsvInstallationIfNotExists() (err error) {
